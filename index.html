@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#EAF4EF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Boekenkast">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>Boekenkast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EAF4EF; --card:#FFFFFF; --ink:#1D2340; --muted:#5D6680; --line:#D3DFD8;
+  --accent:#6A4CE0; --accent-ink:#FFFFFF; --wood:#C98F5E; --wood-dark:#9C6A41; --gold:#F3B93B;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 var(--body);-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+img{max-width:100%;display:block}
+.wrap{max-width:640px;margin:0 auto;padding:20px 18px 120px}
+
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font:800 clamp(30px,8.5vw,44px)/1.02 var(--display);letter-spacing:-.02em;margin:6px 0 0}
+.iconbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;box-shadow:0 1px 0 var(--line)}
+h2{font:700 21px/1.2 var(--display);margin:30px 0 12px}
+.hint{color:var(--muted);font-size:15px;margin:0}
+
+.goal{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px}
+.goal p{margin:0}
+.goal .big{font:800 26px/1.15 var(--display)}
+.goal .sub{color:#B9C0DA;font-size:15px;margin-top:2px}
+.bar{height:10px;border-radius:5px;background:rgba(255,255,255,.18);margin-top:12px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--gold);border-radius:5px;transition:width .4s}
+
+.reading{display:grid;gap:12px}
+.rcard{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);border:0;border-radius:16px;padding:12px}
+.rcard .cv{width:64px;flex:none}
+.rcard h3{font:700 17px/1.25 var(--body);margin:0}
+.rcard .au{color:var(--muted);font-size:15px;margin:2px 0 8px}
+.pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.pbar>i{display:block;height:100%;background:var(--accent)}
+.pnum{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* De boekenplank */
+.shelf{display:flex;flex-wrap:wrap;align-items:flex-end;padding:0 10px;border-radius:6px;
+  background:repeating-linear-gradient(to bottom,transparent 0 146px,var(--wood) 146px 158px,var(--wood-dark) 158px 162px);
+  min-height:162px}
+.slot{height:162px;display:flex;align-items:flex-end;padding-bottom:16px;margin-right:2px}
+.spine{position:relative;border:0;border-radius:3px 3px 1px 1px;padding:8px 0;display:flex;justify-content:center;
+  box-shadow:inset -3px 0 0 rgba(0,0,0,.14),inset 2px 0 0 rgba(255,255,255,.18);overflow:hidden}
+.spine span{writing-mode:vertical-rl;font:600 12px/1 var(--display);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
+.spine.fav::before{content:"";position:absolute;left:0;right:0;top:6px;height:5px;background:var(--gold)}
+.shelf-empty{height:162px;display:flex;align-items:center;padding:0 6px 20px;color:var(--muted);font-size:15px}
+
+.wish{display:grid;gap:8px}
+.wrow{display:flex;gap:12px;align-items:center;background:var(--card);border:0;border-radius:14px;padding:10px 12px;width:100%;text-align:left}
+.wrow .cv{width:40px;flex:none}
+.wrow b{display:block;font-size:16px;line-height:1.25}
+.wrow small{color:var(--muted);font-size:14px}
+
+.cv{aspect-ratio:2/3;border-radius:4px;overflow:hidden;background:#ccc}
+.cv img{width:100%;height:100%;object-fit:cover}
+.gen{width:100%;height:100%;display:flex;align-items:flex-end;padding:6px;color:#fff;font:700 10px/1.15 var(--display);overflow:hidden}
+
+.add{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:15px 26px;border-radius:999px;
+  box-shadow:0 6px 18px rgba(74,50,170,.35);white-space:nowrap;display:flex;gap:8px;align-items:center;z-index:5}
+
+/* Sheets */
+.overlay{position:fixed;inset:0;background:rgba(29,35,64,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.overlay.open{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;
+  padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}.bar>i{transition:none}}
+.sheet h2{margin:0 0 14px}
+.sheet-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.sheet-top h2{margin:0}
+.close{border:0;background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700}
+.choice{display:grid;gap:10px}
+.choice button{display:flex;gap:14px;align-items:center;text-align:left;border:0;background:var(--card);border-radius:16px;padding:16px}
+.choice b{display:block}
+.choice small{color:var(--muted);font-size:14px}
+.ico{width:44px;height:44px;border-radius:12px;background:#E6E0FF;display:grid;place-items:center;flex:none}
+
+label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
+input[type=text],input[type=number],input[type=date],textarea,input[type=search]{width:100%;border:2px solid var(--line);background:#fff;border-radius:12px;padding:11px 12px;font-size:17px}
+input:focus,textarea:focus{border-color:var(--accent);outline:none}
+textarea{min-height:110px;resize:vertical}
+.btn{border:0;background:var(--accent);color:#fff;font-weight:700;border-radius:12px;padding:13px 18px;width:100%;margin-top:16px}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn.danger{background:transparent;color:#B42344;text-decoration:underline;width:auto;padding:8px 0}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+input[type=date]{min-width:0;-webkit-appearance:none;appearance:none;min-height:50px}
+
+.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:10px 4px;font-size:15px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--accent);color:#fff}
+
+.detail-head{display:flex;gap:16px;margin-bottom:16px}
+.detail-head .cv{width:96px;flex:none}
+.detail-head h3{font:800 22px/1.15 var(--display);margin:0 0 4px}
+.detail-head p{margin:0;color:var(--muted);font-size:15px}
+
+.stars{display:flex;gap:4px}
+.stars button{border:0;background:transparent;padding:4px;font-size:34px;line-height:1;color:#C9D3CE}
+.stars button.on{color:var(--gold)}
+
+.results{display:grid;gap:8px;margin-top:14px}
+#reader{width:100%;border-radius:14px;overflow:hidden;background:#000;min-height:220px}
+#reader video{border-radius:14px}
+.status{margin-top:12px;color:var(--muted);font-size:15px}
+.err{color:#B42344}
+
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-120%);
+  background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:40;transition:transform .25s,visibility .25s;visibility:hidden;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">Mijn boekenkast</h1>
+    <button class="iconbtn" id="settingsBtn" aria-label="Instellingen">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </header>
+
+  <section class="goal" id="goal"></section>
+
+  <h2>Nu aan het lezen</h2>
+  <div class="reading" id="reading"></div>
+
+  <h2>Gelezen</h2>
+  <div class="shelf" id="shelf"></div>
+
+  <h2>Wil ik lezen</h2>
+  <div class="wish" id="wish"></div>
+</div>
+
+<button class="add" id="addBtn">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  Boek toevoegen
+</button>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="html5-qrcode.min.js"></script>
+<script>
+"use strict";
+const KEY = "boekenkast-v1";
+const COLORS = ["#E8546B","#F3A73B","#3B82F6","#22A38A","#8B5CF6","#EF7D4F","#2F4B8F","#D9478F","#0E9AA7"];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+const hash = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ---------- Opslag ---------- */
+let state = load();
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && Array.isArray(s.books)) return { name: "", goal: 20, ...s };
+  } catch (e) {}
+  return { name: "", goal: 20, books: [] };
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch (e) { toast("Opslaan lukt niet. Maak een back-up via instellingen."); }
+}
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+
+/* ---------- Hulpjes ---------- */
+function possessive(name) {
+  const n = name.trim();
+  if (!n) return "Mijn boekenkast";
+  if (/[sxz]$/i.test(n)) return `${n}’ boekenkast`;
+  if (/[aeiouyéè]$/i.test(n)) return `${n}’s boekenkast`;
+  return `${n}s boekenkast`;
+}
+function coverHTML(b) {
+  const color = COLORS[hash(b.title) % COLORS.length];
+  const gen = `<div class="gen" style="background:${color}">${esc(b.title)}</div>`;
+  if (!b.cover) return `<div class="cv">${gen}</div>`;
+  return `<div class="cv"><img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML=this.dataset.fb" data-fb="${esc(gen)}"></div>`;
+}
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+const thisYear = () => String(new Date().getFullYear());
+const byId = id => state.books.find(b => b.id === id);
+
+/* ---------- Hoofdscherm ---------- */
+function render() {
+  $("#title").textContent = possessive(state.name);
+  document.title = possessive(state.name);
+
+  const year = thisYear();
+  const doneYear = state.books.filter(b => b.status === "gelezen" && (b.finished || "").startsWith(year));
+  const pages = doneYear.reduce((s, b) => s + (Number(b.pages) || 0), 0);
+  const goal = Math.max(1, Number(state.goal) || 1);
+  const pct = Math.min(100, Math.round(doneYear.length / goal * 100));
+  $("#goal").innerHTML = `
+    <p class="big">${doneYear.length} van ${goal} boeken in ${year}</p>
+    <p class="sub">${pages ? `${pages.toLocaleString("nl-NL")} bladzijden gelezen` : "Elk uitgelezen boek telt mee voor je doel"}${doneYear.length >= goal ? " · Doel gehaald!" : ""}</p>
+    <div class="bar"><i style="width:${pct}%"></i></div>`;
+
+  const reading = state.books.filter(b => b.status === "lezen");
+  $("#reading").innerHTML = reading.length ? reading.map(b => {
+    const p = Number(b.pages) || 0, cur = Math.min(Number(b.page) || 0, p || Infinity);
+    const pp = p ? Math.round(cur / p * 100) : 0;
+    return `<button class="rcard" data-open="${b.id}">
+      ${coverHTML(b)}
+      <div style="flex:1;min-width:0">
+        <h3>${esc(b.title)}</h3>
+        <p class="au">${esc((b.authors || []).join(", "))}</p>
+        ${p ? `<div class="pbar"><i style="width:${pp}%"></i></div><p class="pnum">Bladzijde ${cur} van ${p}</p>` : `<p class="pnum">Tik om je bladzijde bij te houden</p>`}
+      </div></button>`;
+  }).join("") : `<p class="hint">Je leest nu geen boek. Voeg er een toe met de knop onderin.</p>`;
+
+  const done = state.books.filter(b => b.status === "gelezen")
+    .sort((a, b) => (a.finished || "").localeCompare(b.finished || ""));
+  $("#shelf").innerHTML = done.length ? done.map(b => {
+    const h = hash(b.title + (b.isbn || ""));
+    const w = Math.max(24, Math.min(46, Math.round((Number(b.pages) || 180) / 9)));
+    const ht = 104 + (h % 26);
+    return `<div class="slot"><button class="spine${b.rating === 5 ? " fav" : ""}" data-open="${b.id}"
+      style="width:${w}px;height:${ht}px;background:${COLORS[h % COLORS.length]}" aria-label="${esc(b.title)}"><span>${esc(b.title)}</span></button></div>`;
+  }).join("") : `<div class="shelf-empty">Nog leeg. Als je een boek uit hebt, komt het hier te staan.</div>`;
+
+  const wish = state.books.filter(b => b.status === "wil");
+  $("#wish").innerHTML = wish.length ? wish.map(b => `
+    <button class="wrow" data-open="${b.id}">${coverHTML(b)}
+      <div style="min-width:0"><b>${esc(b.title)}</b><small>${esc((b.authors || []).join(", "))}</small></div></button>`).join("")
+    : `<p class="hint">Hoorde je over een leuk boek? Zet het hier, dan vergeet je het niet.</p>`;
+}
+document.addEventListener("click", e => {
+  const o = e.target.closest("[data-open]");
+  if (o && !o.closest(".sheet")) openDetail(o.dataset.open);
+});
+
+/* ---------- Sheet ---------- */
+let onClose = null;
+function openSheet(html, closeFn) {
+  $("#sheet").innerHTML = html;
+  $("#overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+  onClose = closeFn || null;
+}
+async function closeSheet() {
+  if (onClose) { const f = onClose; onClose = null; await f(); }
+  $("#overlay").classList.remove("open");
+  document.body.style.overflow = "";
+  render();
+}
+$("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#overlay").classList.contains("open")) closeSheet(); });
+const sheetTop = title => `<div class="sheet-top"><h2>${title}</h2><button class="close" onclick="closeSheet()">Sluiten</button></div>`;
+
+/* ---------- Welkom & instellingen ---------- */
+function openWelcome() {
+  openSheet(`<h2>Hoi! Hoe heet je?</h2>
+    <p class="hint">Dan zetten we je naam boven je boekenkast.</p>
+    <label for="wName">Je naam</label><input type="text" id="wName" autocomplete="given-name">
+    <label for="wGoal">Hoeveel boeken wil je dit jaar lezen?</label><input type="number" id="wGoal" inputmode="numeric" min="1" value="${state.goal}">
+    <button class="btn" id="wGo">Beginnen</button>`);
+  $("#wGo").onclick = () => {
+    state.name = $("#wName").value.trim();
+    state.goal = Math.max(1, parseInt($("#wGoal").value) || 20);
+    save(); closeSheet();
+  };
+}
+$("#settingsBtn").onclick = () => {
+  openSheet(`${sheetTop("Instellingen")}
+    <label for="sName">Je naam</label><input type="text" id="sName" value="${esc(state.name)}">
+    <label for="sGoal">Boeken lezen in ${thisYear()}</label><input type="number" id="sGoal" inputmode="numeric" min="1" value="${state.goal}">
+    <h2 style="margin-top:28px">Back-up</h2>
+    <p class="hint">Je boeken staan alleen op deze telefoon. Maak af en toe een back-up, dan raak je ze nooit kwijt.</p>
+    <button class="btn" id="exp">Back-up maken</button>
+    <button class="btn ghost" id="impBtn">Back-up terugzetten</button>
+    <input type="file" id="imp" accept="application/json,.json" hidden>`);
+  $("#sName").oninput = e => { state.name = e.target.value; save(); $("#title").textContent = possessive(state.name); };
+  $("#sGoal").oninput = e => { const v = parseInt(e.target.value); if (v > 0) { state.goal = v; save(); } };
+  $("#exp").onclick = exportData;
+  $("#impBtn").onclick = () => $("#imp").click();
+  $("#imp").onchange = importData;
+};
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `boekenkast-backup-${today()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast("Back-up gemaakt");
+}
+function importData(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result);
+      if (!d || !Array.isArray(d.books)) throw 0;
+      if (!confirm(`Deze back-up heeft ${d.books.length} boeken. Wil je je huidige boekenkast hiermee vervangen?`)) return;
+      state = { name: "", goal: 20, ...d }; save(); closeSheet(); toast("Back-up teruggezet");
+    } catch (err) { toast("Dit bestand is geen back-up van de boekenkast"); }
+  };
+  r.readAsText(f);
+}
+
+/* ---------- Boeken opzoeken ---------- */
+async function googleSearch(q) {
+  const r = await fetch("https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=20&q=" + encodeURIComponent(q));
+  if (!r.ok) throw new Error("google " + r.status);
+  const j = await r.json();
+  return (j.items || []).map(it => {
+    const v = it.volumeInfo || {}, ids = v.industryIdentifiers || [];
+    const isbn = (ids.find(x => x.type === "ISBN_13") || ids.find(x => x.type === "ISBN_10") || {}).identifier || "";
+    return { title: v.title || "Zonder titel", authors: v.authors || [], pages: v.pageCount || null,
+      cover: (v.imageLinks?.thumbnail || v.imageLinks?.smallThumbnail || "").replace(/^http:/, "https:"),
+      isbn, year: (v.publishedDate || "").slice(0, 4) };
+  });
+}
+async function olSearch(q) {
+  const r = await fetch("https://openlibrary.org/search.json?limit=20&fields=title,author_name,number_of_pages_median,cover_i,isbn,first_publish_year&q=" + encodeURIComponent(q));
+  if (!r.ok) throw new Error("openlibrary " + r.status);
+  const j = await r.json();
+  return (j.docs || []).map(d => ({ title: d.title, authors: d.author_name || [], pages: d.number_of_pages_median || null,
+    cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : "",
+    isbn: (d.isbn || []).find(x => x.length === 13) || "", year: d.first_publish_year ? String(d.first_publish_year) : "" }));
+}
+async function lookupIsbn(isbn) {
+  try {
+    const g = await googleSearch("isbn:" + isbn);
+    if (g.length) {
+      const b = { ...g[0], isbn };
+      if (!b.cover) b.cover = `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg?default=false`;
+      return b;
+    }
+  } catch (e) {}
+  try {
+    const r = await fetch(`https://openlibrary.org/api/books?format=json&jscmd=data&bibkeys=ISBN:${isbn}`);
+    const d = (await r.json())["ISBN:" + isbn];
+    if (d) return { title: d.title, authors: (d.authors || []).map(a => a.name), pages: d.number_of_pages || null,
+      cover: d.cover?.medium || "", isbn, year: (d.publish_date || "").match(/\d{4}/)?.[0] || "" };
+  } catch (e) {}
+  return null;
+}
+async function searchBoth(q) {
+  const [g, o] = await Promise.allSettled([googleSearch(q), olSearch(q)]);
+  const list = [...(g.value || []), ...(o.value || [])];
+  const seen = new Set();
+  return list.filter(b => {
+    const k = (b.title + "|" + (b.authors[0] || "")).toLowerCase();
+    if (seen.has(k)) return false; seen.add(k); return true;
+  });
+}
+
+/* ---------- Toevoegen ---------- */
+$("#addBtn").onclick = () => openSheet(`${sheetTop("Boek toevoegen")}
+  <div class="choice">
+    <button id="cScan"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></span>
+      <span><b>Scan de streepjescode</b><small>Achterop het boek, het snelst</small></span></button>
+    <button id="cSearch"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+      <span><b>Zoek op titel</b><small>Of op schrijver</small></span></button>
+    <button id="cManual"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+      <span><b>Zelf invullen</b><small>Als het boek niet gevonden wordt</small></span></button>
+  </div>`);
+document.addEventListener("click", e => {
+  if (e.target.closest("#cScan")) openScanner();
+  else if (e.target.closest("#cSearch")) openSearch();
+  else if (e.target.closest("#cManual")) openManual({});
+});
+
+let scanner = null;
+async function stopScanner() {
+  if (scanner) { try { await scanner.stop(); } catch (e) {} try { scanner.clear(); } catch (e) {} scanner = null; }
+}
+async function openScanner() {
+  await stopScanner();
+  openSheet(`${sheetTop("Scan de streepjescode")}
+    <div id="reader"></div>
+    <p class="status" id="scanStatus">Houd de streepjescode achterop het boek in beeld.</p>`, stopScanner);
+  if (typeof Html5Qrcode === "undefined") { $("#scanStatus").innerHTML = `<span class="err">De scanner kon niet laden. Zoek het boek op titel.</span>`; return; }
+  let busy = false;
+  scanner = new Html5Qrcode("reader", {
+    formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13], verbose: false,
+    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+  });
+  try {
+    await scanner.start({ facingMode: "environment" },
+      { fps: 10, qrbox: (w) => ({ width: Math.floor(w * 0.85), height: Math.floor(w * 0.4) }) },
+      async text => {
+        if (busy) return;
+        const isbn = text.replace(/\D/g, "");
+        if (!/^97[89]\d{10}$/.test(isbn)) { $("#scanStatus").textContent = "Dat is geen boekcode. Zoek de streepjescode met 978 of 979 ervoor."; return; }
+        busy = true;
+        if (navigator.vibrate) navigator.vibrate(60);
+        await stopScanner(); onClose = null;
+        $("#reader").remove();
+        $("#scanStatus").innerHTML = `<span class="spinner"></span>Boek opzoeken…`;
+        const b = await lookupIsbn(isbn);
+        if (b) openPreview(b);
+        else openManual({ isbn }, "Dit boek staat niet in de boekendatabases. Vul het zelf in, dat kan ook.");
+      }, () => {});
+  } catch (err) {
+    $("#scanStatus").innerHTML = `<span class="err">De camera start niet. Geef de browser toestemming om de camera te gebruiken, of zoek het boek op titel.</span>`;
+  }
+}
+
+function openSearch() {
+  openSheet(`${sheetTop("Zoek een boek")}
+    <input type="search" id="q" placeholder="Titel of schrijver" enterkeyhint="search" autocomplete="off">
+    <div class="results" id="res"></div>
+    <button class="btn ghost" id="toManual">Niet gevonden? Zelf invullen</button>`);
+  const q = $("#q"); q.focus();
+  let t, n = 0, results = [];
+  q.oninput = () => { clearTimeout(t); t = setTimeout(run, 450); };
+  q.onkeydown = e => { if (e.key === "Enter") { clearTimeout(t); run(); } };
+  $("#toManual").onclick = () => openManual({ title: q.value.trim() });
+  async function run() {
+    const v = q.value.trim(), my = ++n;
+    if (v.length < 2) { $("#res").innerHTML = ""; return; }
+    $("#res").innerHTML = `<p class="status"><span class="spinner"></span>Zoeken…</p>`;
+    results = await searchBoth(v);
+    if (my !== n) return;
+    $("#res").innerHTML = results.length ? results.map((b, i) => `
+      <button class="wrow" data-pick="${i}">${coverHTML(b)}
+        <div style="min-width:0"><b>${esc(b.title)}</b><small>${esc([b.authors.join(", "), b.year].filter(Boolean).join(", "))}</small></div></button>`).join("")
+      : `<p class="status">Niets gevonden. Probeer een ander woord, of vul het boek zelf in.</p>`;
+    $("#res").querySelectorAll("[data-pick]").forEach(el => el.onclick = () => openPreview(results[+el.dataset.pick]));
+  }
+}
+
+function openManual(pre, msg) {
+  openSheet(`${sheetTop("Zelf invullen")}
+    ${msg ? `<p class="hint">${esc(msg)}</p>` : ""}
+    <label for="mT">Titel</label><input type="text" id="mT" value="${esc(pre.title || "")}">
+    <label for="mA">Schrijver</label><input type="text" id="mA" value="${esc((pre.authors || []).join(", "))}">
+    <label for="mP">Aantal bladzijden</label><input type="number" id="mP" inputmode="numeric" min="1" value="${pre.pages || ""}">
+    <button class="btn" id="mGo">Verder</button>`);
+  $("#mGo").onclick = () => {
+    const title = $("#mT").value.trim();
+    if (!title) { $("#mT").focus(); toast("Vul in elk geval de titel in"); return; }
+    openPreview({ title, authors: $("#mA").value.split(",").map(s => s.trim()).filter(Boolean),
+      pages: parseInt($("#mP").value) || null, isbn: pre.isbn || "", cover: "" });
+  };
+}
+
+function openPreview(b) {
+  const dup = state.books.find(x => (b.isbn && x.isbn === b.isbn) ||
+    ((x.title || "").toLowerCase() === b.title.toLowerCase() && ((x.authors || [])[0] || "") === ((b.authors || [])[0] || "")));
+  if (dup) { toast("Dit boek staat al in je boekenkast"); openDetail(dup.id); return; }
+  openSheet(`${sheetTop("Waar zet je het neer?")}
+    <div class="detail-head">${coverHTML(b)}
+      <div><h3>${esc(b.title)}</h3><p>${esc((b.authors || []).join(", "))}</p>
+      <p>${[b.pages ? b.pages + " bladzijden" : "", b.year].filter(Boolean).join(", ")}</p></div></div>
+    <div class="choice">
+      <button data-st="lezen"><span><b>Ik ben het aan het lezen</b></span></button>
+      <button data-st="gelezen"><span><b>Ik heb het al uit</b></span></button>
+      <button data-st="wil"><span><b>Ik wil het nog lezen</b></span></button>
+    </div>`);
+  $("#sheet").querySelectorAll("[data-st]").forEach(el => el.onclick = () => {
+    const st = el.dataset.st;
+    const book = { id: uid(), title: b.title, authors: b.authors || [], pages: b.pages || null, cover: b.cover || "",
+      isbn: b.isbn || "", year: b.year || "", status: st, page: st === "gelezen" ? (b.pages || 0) : 0,
+      rating: 0, review: "", started: st === "lezen" ? today() : "", finished: st === "gelezen" ? today() : "", added: today() };
+    state.books.push(book); save();
+    if (st === "gelezen") openDetail(book.id, "Hoeveel sterren geef je het?");
+    else { closeSheet(); toast(st === "lezen" ? "Veel leesplezier!" : "Op je verlanglijst gezet"); }
+  });
+}
+
+/* ---------- Boek bekijken en bijwerken ---------- */
+function openDetail(id, msg) {
+  const b = byId(id); if (!b) return;
+  const segBtn = (v, t) => `<button data-s="${v}" aria-pressed="${b.status === v}">${t}</button>`;
+  openSheet(`${sheetTop("")}
+    <div class="detail-head">${coverHTML(b)}
+      <div><h3>${esc(b.title)}</h3><p>${esc((b.authors || []).join(", "))}</p></div></div>
+    ${msg ? `<p class="hint" style="margin-bottom:10px">${esc(msg)}</p>` : ""}
+    <div class="seg">${segBtn("wil", "Wil ik lezen")}${segBtn("lezen", "Aan het lezen")}${segBtn("gelezen", "Gelezen")}</div>
+    <div id="dBody"></div>
+    <button class="btn danger" id="del">Boek verwijderen</button>`);
+  $("#sheet").querySelectorAll("[data-s]").forEach(el => el.onclick = () => {
+    const s = el.dataset.s; if (s === b.status) return;
+    b.status = s;
+    if (s === "lezen" && !b.started) b.started = today();
+    if (s === "gelezen") {
+      if (!b.finished) b.finished = today();
+      if (b.pages) b.page = b.pages;
+      const n = state.books.filter(x => x.status === "gelezen" && (x.finished || "").startsWith(thisYear())).length;
+      toast(`Op de plank gezet! Boek ${n} van dit jaar.`);
+    }
+    if (s !== "gelezen") b.finished = "";
+    save();
+    $("#sheet").querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", x.dataset.s === s));
+    body();
+  });
+  $("#del").onclick = () => {
+    if (!confirm(`"${b.title}" uit je boekenkast verwijderen?`)) return;
+    state.books = state.books.filter(x => x.id !== b.id); save(); closeSheet(); toast("Boek verwijderd");
+  };
+  function body() {
+    let h = "";
+    if (b.status === "lezen") h += `
+      <div class="row"><div><label for="dPg">Ik ben op bladzijde</label><input type="number" id="dPg" inputmode="numeric" min="0" value="${b.page || ""}"></div>
+      <div><label for="dPs">van de</label><input type="number" id="dPs" inputmode="numeric" min="1" value="${b.pages || ""}"></div></div>`;
+    if (b.status === "gelezen") h += `
+      <label>Hoeveel sterren?</label>
+      <div class="stars" id="stars">${[1,2,3,4,5].map(n => `<button data-r="${n}" class="${n <= b.rating ? "on" : ""}" aria-label="${n} ster${n > 1 ? "ren" : ""}">★</button>`).join("")}</div>`;
+    if (b.status !== "wil") h += `
+      <div class="row">
+        <div><label for="dSt">Begonnen op</label><input type="date" id="dSt" value="${b.started || ""}"></div>
+        ${b.status === "gelezen" ? `<div><label for="dFi">Uitgelezen op</label><input type="date" id="dFi" value="${b.finished || ""}"></div>` : ""}
+      </div>
+      <label for="dRv">${b.status === "gelezen" ? "Wat vond je ervan?" : "Aantekeningen"}</label>
+      <textarea id="dRv" placeholder="${b.status === "gelezen" ? "Wie was je favoriete personage? Zou je het nog een keer lezen?" : "Wat is er tot nu toe gebeurd?"}">${esc(b.review)}</textarea>`;
+    else h += `<label for="dRv">Waarom wil je het lezen?</label>
+      <textarea id="dRv" placeholder="Bijvoorbeeld: tip van een vriendin">${esc(b.review)}</textarea>`;
+    h += `<button class="btn" onclick="closeSheet()">Klaar</button>`;
+    $("#dBody").innerHTML = h;
+    const bind = (sel, fn) => { const el = $(sel); if (el) el.oninput = e => { fn(e.target.value); save(); }; };
+    bind("#dPg", v => b.page = Math.max(0, parseInt(v) || 0));
+    bind("#dPs", v => b.pages = parseInt(v) || null);
+    bind("#dSt", v => b.started = v);
+    bind("#dFi", v => b.finished = v);
+    bind("#dRv", v => b.review = v);
+    $("#dBody").querySelectorAll("[data-r]").forEach(el => el.onclick = () => {
+      const r = +el.dataset.r; b.rating = b.rating === r ? 0 : r; save();
+      $("#dBody").querySelectorAll("[data-r]").forEach(x => x.classList.toggle("on", +x.dataset.r <= b.rating));
+    });
+    const pg = $("#dPg");
+    if (pg) pg.addEventListener("change", () => {
+      if (b.pages && b.page >= b.pages) toast("Uit? Tik dan op Gelezen.");
+    });
+  }
+  body();
+}
+
+/* ---------- Start ---------- */
+render();
+if (!state.name && !state.books.length) openWelcome();
+</script>
+</body>
+</html>
