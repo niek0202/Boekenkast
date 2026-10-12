@@ -1,6 +1,6 @@
-# Boekenkast
+# Mijn bibliotheek
 
-Leesdagboek voor op de telefoon. Boeken toevoegen via de streepjescode, zoeken op titel of zelf invullen.
+Leesdagboek voor op de telefoon in de vorm van een eigen bibliotheek: een kast met boekruggen, een leestafel, een leesstapel, en elk boek opent als een echt boek met titelpagina, bladwijzer, gedachten en leeskaart.
 
 ## Online zetten met GitHub Pages
 1. Maak op GitHub een nieuwe repository, bijvoorbeeld `boekenkast` (mag openbaar zijn; de boeken zelf staan niet in de repo, alleen op de telefoon).

@@ -1,189 +1,436 @@
 <!doctype html>
-<html lang="nl">
+<html lang="nl" data-light="lamp">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#EAF4EF">
+<meta name="theme-color" content="#14291F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Boekenkast">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bibliotheek">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
-<title>Boekenkast</title>
+<title>Mijn bibliotheek</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#EAF4EF; --card:#FFFFFF; --ink:#1D2340; --muted:#5D6680; --line:#D3DFD8;
-  --accent:#6A4CE0; --accent-ink:#FFFFFF; --wood:#C98F5E; --wood-dark:#9C6A41; --gold:#F3B93B;
-  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --type:"Special Elite","Courier New",Courier,monospace;
+  --hand:"Caveat","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --brass:#C9A45C;--brass-hi:#F1D58E;--brass-dk:#8A6A2F;
+  --gold:#E9C977;
+  --paper:#F4ECD8;--paper-dk:#E3D4B2;--ink:#2B1D14;--ink-soft:#6B5844;
+  --stamp:#5A4BB8;--ribbon:#A3262E;
+  --card:#FBF7EC;
+  --noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .1 0 0 0 .13 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
+[data-light=lamp]{--wall:#14291F;--wall-2:#0E1E17;--glow:rgba(255,190,105,.20);--wood:#5A3A24;--wood-hi:#80563A;--wood-dk:#2E1D12;--inside:#1E130B;--on-wall:#F1E6CC;--on-wall-soft:#B5AD92;color-scheme:dark}
+[data-light=dag]{--wall:#C9D8C4;--wall-2:#B6C9B0;--glow:rgba(255,255,240,.45);--wood:#9A6A43;--wood-hi:#BE8B5D;--wood-dk:#6B4629;--inside:#4A3121;--on-wall:#1E2C23;--on-wall-soft:#4C5D51;color-scheme:light}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 var(--body);-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;background:var(--wall)}
+body{margin:0;min-height:100vh;color:var(--on-wall);font:17px/1.5 var(--display);-webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(ellipse 120% 55% at 18% -6%,var(--glow),transparent 70%),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 2px,transparent 2px 34px),
+    linear-gradient(var(--wall),var(--wall-2));
+  transition:color .4s}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-img{max-width:100%;display:block}
-.wrap{max-width:640px;margin:0 auto;padding:20px 18px 120px}
+:focus-visible{outline:3px solid var(--brass-hi);outline-offset:2px}
+img{display:block;max-width:100%}
+.wrap{max-width:620px;margin:0 auto;padding:14px 16px 140px}
 
-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
-h1{font:800 clamp(30px,8.5vw,44px)/1.02 var(--display);letter-spacing:-.02em;margin:6px 0 0}
-.iconbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;box-shadow:0 1px 0 var(--line)}
-h2{font:700 21px/1.2 var(--display);margin:30px 0 12px}
-.hint{color:var(--muted);font-size:15px;margin:0}
+/* Kop */
+header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.lamp{flex:none;width:52px;height:60px;border:0;background:none;padding:0;position:relative}
+.lamp .shade{transition:fill .3s}
+[data-light=lamp] .lamp::after{content:"";position:absolute;left:-18px;right:-18px;top:28px;height:60px;
+  background:radial-gradient(ellipse 50% 100% at 50% 0,rgba(255,214,140,.42),transparent);pointer-events:none}
+h1{flex:1;margin:4px 0 0;font:italic 700 clamp(30px,9vw,46px)/1 var(--display);font-variation-settings:"opsz" 144;letter-spacing:-.01em}
+.foil{background:linear-gradient(175deg,#F7E3A6 0%,#D9B25E 38%,#9C7330 55%,#E7C878 72%,#B48A3E 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
+[data-light=dag] .foil{filter:drop-shadow(0 1px 0 rgba(255,255,255,.5))}
+.gear{flex:none;width:42px;height:42px;border-radius:50%;border:0;margin-top:6px;color:#3B2A12;
+  background:radial-gradient(circle at 35% 30%,var(--brass-hi),var(--brass) 45%,var(--brass-dk));box-shadow:0 2px 6px rgba(0,0,0,.35);display:grid;place-items:center}
 
-.goal{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px}
-.goal p{margin:0}
-.goal .big{font:800 26px/1.15 var(--display)}
-.goal .sub{color:#B9C0DA;font-size:15px;margin-top:2px}
-.bar{height:10px;border-radius:5px;background:rgba(255,255,255,.18);margin-top:12px;overflow:hidden}
-.bar>i{display:block;height:100%;background:var(--gold);border-radius:5px;transition:width .4s}
+/* Messing plaatje */
+.plaque{display:block;width:100%;border:0;text-align:left;padding:13px 18px 14px;border-radius:6px;color:#3A2A10;position:relative;
+  background:linear-gradient(180deg,#F3DA97,#CDA65A 48%,#B48C43 52%,#D9B66A);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -2px 0 rgba(0,0,0,.2),0 6px 14px rgba(0,0,0,.35)}
+.plaque::before,.plaque::after{content:"";position:absolute;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#FFF1C4,#8A6A2F);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.plaque::before{left:7px}.plaque::after{right:7px}
+.plaque b{display:block;font:italic 700 22px/1.15 var(--display);text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.plaque span{font:15px/1.3 var(--type);opacity:.85}
+.groove{height:7px;border-radius:4px;margin-top:9px;background:rgba(60,40,10,.35);box-shadow:inset 0 1px 2px rgba(0,0,0,.4);overflow:hidden}
+.groove i{display:block;height:100%;background:linear-gradient(#FFF0B8,#E3BC5B);border-radius:4px;transition:width .8s}
 
-.reading{display:grid;gap:12px}
-.rcard{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);border:0;border-radius:16px;padding:12px}
-.rcard .cv{width:64px;flex:none}
-.rcard h3{font:700 17px/1.25 var(--body);margin:0}
-.rcard .au{color:var(--muted);font-size:15px;margin:2px 0 8px}
-.pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
-.pbar>i{display:block;height:100%;background:var(--accent)}
-.pnum{font-size:14px;color:var(--muted);margin-top:4px}
+h2.room{font:italic 600 24px/1.1 var(--display);margin:34px 2px 12px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.hintline{font:20px/1.3 var(--hand);color:var(--on-wall-soft);margin:0 4px}
 
-/* De boekenplank */
-.shelf{display:flex;flex-wrap:wrap;align-items:flex-end;padding:0 10px;border-radius:6px;
-  background:repeating-linear-gradient(to bottom,transparent 0 146px,var(--wood) 146px 158px,var(--wood-dark) 158px 162px);
-  min-height:162px}
-.slot{height:162px;display:flex;align-items:flex-end;padding-bottom:16px;margin-right:2px}
-.spine{position:relative;border:0;border-radius:3px 3px 1px 1px;padding:8px 0;display:flex;justify-content:center;
-  box-shadow:inset -3px 0 0 rgba(0,0,0,.14),inset 2px 0 0 rgba(255,255,255,.18);overflow:hidden}
-.spine span{writing-mode:vertical-rl;font:600 12px/1 var(--display);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
-.spine.fav::before{content:"";position:absolute;left:0;right:0;top:6px;height:5px;background:var(--gold)}
-.shelf-empty{height:162px;display:flex;align-items:center;padding:0 6px 20px;color:var(--muted);font-size:15px}
+/* Leestafel */
+.desk{padding:18px 14px 0;border-radius:8px 8px 0 0;position:relative}
+.desk::after{content:"";display:block;height:18px;margin:0 -14px;border-radius:3px;
+  background:linear-gradient(var(--wood-hi),var(--wood) 40%,var(--wood-dk));box-shadow:0 10px 18px rgba(0,0,0,.35)}
+.stand{display:flex;gap:18px;align-items:flex-end;padding-bottom:0}
+.stand+.stand{margin-top:22px}
+.standbook{flex:none;width:112px;border:0;padding:0;background:none;position:relative;transform:perspective(700px) rotateY(16deg);transform-origin:left;
+  filter:drop-shadow(10px 6px 8px rgba(0,0,0,.45))}
+.standbook .art{border-radius:2px 5px 5px 2px;box-shadow:3px 0 0 #EFE3C4,5px 1px 0 #D9CAA6,7px 2px 0 #C4B48E}
+.ribbon{position:absolute;left:62%;bottom:-26px;width:10px;height:34px;background:linear-gradient(90deg,#7E1820,var(--ribbon) 40%,#C2434B);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);transform-origin:top;animation:sway 4s ease-in-out infinite}
+@keyframes sway{50%{transform:rotate(4deg)}}
+.sinfo{flex:1;min-width:0;padding-bottom:14px}
+.sinfo h3{font:700 19px/1.18 var(--display);margin:0;color:var(--on-wall)}
+.sinfo .au{margin:2px 0 6px;color:var(--on-wall-soft);font-size:15px}
+.pageno{font:700 30px/1 var(--hand);color:var(--on-wall)}
+.pageno small{font-size:20px;font-weight:500;color:var(--on-wall-soft)}
+.ribbon-range{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;margin:4px 0 6px}
+.ribbon-range::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--brass) var(--p,0%),rgba(255,255,255,.18) var(--p,0%))}
+.ribbon-range::-moz-range-track{height:4px;border-radius:2px;background:rgba(255,255,255,.18)}
+.ribbon-range::-moz-range-progress{height:4px;background:var(--brass)}
+.ribbon-range::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:28px;margin-top:-12px;border:0;border-radius:2px 2px 0 0;background:var(--ribbon);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.ribbon-range::-moz-range-thumb{width:16px;height:28px;border:0;border-radius:2px;background:var(--ribbon)}
+[data-light=dag] .ribbon-range::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--brass-dk) var(--p,0%),rgba(0,0,0,.15) var(--p,0%))}
+.uit{border:2px solid var(--brass);background:transparent;color:var(--brass-hi);font:16px/1 var(--type);letter-spacing:.06em;padding:8px 14px;border-radius:4px;transform:rotate(-3deg)}
+[data-light=dag] .uit{color:var(--brass-dk);border-color:var(--brass-dk)}
+.empty-desk{font:21px/1.35 var(--hand);color:var(--on-wall-soft);padding:6px 4px 16px}
 
-.wish{display:grid;gap:8px}
-.wrow{display:flex;gap:12px;align-items:center;background:var(--card);border:0;border-radius:14px;padding:10px 12px;width:100%;text-align:left}
-.wrow .cv{width:40px;flex:none}
-.wrow b{display:block;font-size:16px;line-height:1.25}
-.wrow small{color:var(--muted);font-size:14px}
+/* Boekenkast */
+.labelholder{border:0;padding:3px;border-radius:3px;font:19px/1 var(--hand);color:var(--ink);
+  background:linear-gradient(180deg,#F3DA97,#B48C43);box-shadow:0 2px 4px rgba(0,0,0,.35);flex:none}
+.labelholder span{display:block;background:var(--card);padding:5px 10px 4px;border-radius:2px;box-shadow:inset 0 1px 2px rgba(0,0,0,.25);min-width:104px;text-align:center}
+.case{border-radius:6px 6px 3px 3px;padding:12px 11px 0;position:relative;
+  background:linear-gradient(90deg,var(--wood-dk),var(--wood) 6%,var(--wood-hi) 50%,var(--wood) 94%,var(--wood-dk));
+  box-shadow:0 22px 40px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,255,255,.12)}
+.case::before{content:"";position:absolute;left:-6px;right:-6px;top:-10px;height:14px;border-radius:3px;
+  background:linear-gradient(var(--wood-hi),var(--wood) 55%,var(--wood-dk));box-shadow:0 3px 6px rgba(0,0,0,.4)}
+.shelf{display:flex;flex-wrap:wrap;align-items:flex-end;padding:0 6px;min-height:172px;
+  background-color:var(--inside);
+  background-image:repeating-linear-gradient(to bottom,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 34px,rgba(0,0,0,0) 152px,var(--wood-hi) 152px 154px,var(--wood) 154px 166px,var(--wood-dk) 166px 172px),
+    linear-gradient(90deg,rgba(0,0,0,.45),transparent 12%,transparent 88%,rgba(0,0,0,.45));
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+.slot{height:172px;display:flex;align-items:flex-end;padding-bottom:20px;margin-right:1px}
+.spine{--pat:linear-gradient(transparent,transparent);--patsize:auto;
+  position:relative;border:0;padding:16px 0;display:flex;justify-content:center;border-radius:4px 4px 1px 1px;
+  background-color:var(--c);color:var(--t);
+  background-image:var(--noise),
+    linear-gradient(90deg,rgba(0,0,0,.42) 0,rgba(255,255,255,.16) 24%,rgba(255,255,255,0) 46%,rgba(0,0,0,.1) 70%,rgba(0,0,0,.48) 100%),
+    var(--pat),
+    linear-gradient(to bottom,transparent 7px,var(--line) 7px 8px,transparent 8px 10px,var(--line) 10px 11px,transparent 11px calc(100% - 11px),var(--line) calc(100% - 11px) calc(100% - 10px),transparent calc(100% - 10px) calc(100% - 8px),var(--line) calc(100% - 8px) calc(100% - 7px),transparent calc(100% - 7px));
+  background-size:auto,auto,var(--patsize),auto;
+  box-shadow:0 -1px 0 rgba(255,255,255,.12) inset,2px 0 3px rgba(0,0,0,.35);transition:transform .18s ease-out,filter .3s}
+.spine span{writing-mode:vertical-rl;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%;line-height:1;text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.f0 span{font:600 12.5px var(--display)}
+.f1 span{font:italic 600 13.5px var(--display)}
+.f2 span{font:600 11px var(--display);font-variant:small-caps;letter-spacing:.1em}
+.p-band{--pat:linear-gradient(to bottom,transparent 22%,rgba(0,0,0,.35) 22% 23%,rgba(255,255,255,.22) 23% 25%,rgba(0,0,0,.35) 25% 26%,transparent 26% 74%,rgba(0,0,0,.35) 74% 75%,rgba(255,255,255,.22) 75% 77%,rgba(0,0,0,.35) 77% 78%,transparent 78%)}
+.p-stripes{--pat:repeating-linear-gradient(135deg,rgba(255,255,255,.15) 0 4px,transparent 4px 10px)}
+.p-dots{--pat:radial-gradient(rgba(240,212,138,.55) 1.1px,transparent 1.6px);--patsize:7px 7px}
+.spine.fav::after{content:"★";position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:10px;line-height:1;color:var(--gold)}
+.spine.fav{padding-bottom:28px}
+.spine.pull{transform:translateY(-22px)}
+.spine.shine{animation:shine 1.4s ease-out}
+@keyframes shine{0%{filter:brightness(1)}20%{filter:brightness(1.8) drop-shadow(0 0 10px #F7DC8A)}100%{filter:brightness(1)}}
+.deco{font-size:40px;line-height:1;margin:0 5px;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5));user-select:none}
+.deco.pop{animation:pop .7s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes pop{from{transform:scale(0) translateY(20px)}to{transform:none}}
+.shelf-empty{height:172px;display:flex;align-items:center;padding:0 10px 26px;font:20px/1.3 var(--hand);color:#CDBF9C}
 
-.cv{aspect-ratio:2/3;border-radius:4px;overflow:hidden;background:#ccc}
-.cv img{width:100%;height:100%;object-fit:cover}
-.gen{width:100%;height:100%;display:flex;align-items:flex-end;padding:6px;color:#fff;font:700 10px/1.15 var(--display);overflow:hidden}
+/* Leesstapel */
+.stack{display:flex;flex-direction:column;align-items:center;padding:0 10px}
+.slab{--pat:linear-gradient(transparent,transparent);--patsize:auto;border:0;padding:0 18px;display:flex;align-items:center;justify-content:center;border-radius:2px 4px 4px 2px;
+  background-color:var(--c);color:var(--t);
+  background-image:var(--noise),linear-gradient(rgba(255,255,255,.16),rgba(255,255,255,0) 45%,rgba(0,0,0,.35)),var(--pat),
+    linear-gradient(90deg,transparent 9px,var(--line) 9px 10px,transparent 10px calc(100% - 10px),var(--line) calc(100% - 10px) calc(100% - 9px),transparent calc(100% - 9px));
+  background-size:auto,auto,var(--patsize),auto;box-shadow:0 2px 0 rgba(0,0,0,.3);transition:transform .2s}
+.slab span{font:600 14px/1 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.slab.land{animation:land .6s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes land{from{transform:translateY(-120px) rotate(-8deg);opacity:0}}
+.sidetable{width:86%;height:16px;border-radius:3px;background:linear-gradient(var(--wood-hi),var(--wood) 50%,var(--wood-dk));box-shadow:0 10px 16px rgba(0,0,0,.35);margin-top:2px}
+.sidelegs{width:70%;height:26px;margin:0 auto;border-left:10px solid var(--wood-dk);border-right:10px solid var(--wood-dk)}
 
-.add{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));
-  border:0;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:15px 26px;border-radius:999px;
-  box-shadow:0 6px 18px rgba(74,50,170,.35);white-space:nowrap;display:flex;gap:8px;align-items:center;z-index:5}
+/* Nieuw boek */
+.newbook{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) rotate(-1.5deg);z-index:5;
+  border:0;padding:13px 22px 12px;background:var(--card);color:var(--ink);font:18px/1 var(--type);border-radius:2px;white-space:nowrap;
+  background-image:linear-gradient(transparent 7px,#D9534F 7px 8px,transparent 8px);box-shadow:0 10px 24px rgba(0,0,0,.45)}
 
-/* Sheets */
-.overlay{position:fixed;inset:0;background:rgba(29,35,64,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+/* Kaarten (sheets) */
+.overlay{position:fixed;inset:0;background:rgba(5,10,8,.62);display:none;align-items:flex-end;justify-content:center;z-index:20}
 .overlay.open{display:flex}
-.sheet{background:var(--paper);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;
-  padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));animation:up .22s ease-out}
-@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.sheet{animation:none}.bar>i{transition:none}}
-.sheet h2{margin:0 0 14px}
-.sheet-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
-.sheet-top h2{margin:0}
-.close{border:0;background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700}
-.choice{display:grid;gap:10px}
-.choice button{display:flex;gap:14px;align-items:center;text-align:left;border:0;background:var(--card);border-radius:16px;padding:16px}
-.choice b{display:block}
-.choice small{color:var(--muted);font-size:14px}
-.ico{width:44px;height:44px;border-radius:12px;background:#E6E0FF;display:grid;place-items:center;flex:none}
-
-label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
-input[type=text],input[type=number],input[type=date],textarea,input[type=search]{width:100%;border:2px solid var(--line);background:#fff;border-radius:12px;padding:11px 12px;font-size:17px}
-input:focus,textarea:focus{border-color:var(--accent);outline:none}
-textarea{min-height:110px;resize:vertical}
-.btn{border:0;background:var(--accent);color:#fff;font-weight:700;border-radius:12px;padding:13px 18px;width:100%;margin-top:16px}
-.btn.ghost{background:var(--card);color:var(--ink)}
-.btn.danger{background:transparent;color:#B42344;text-decoration:underline;width:auto;padding:8px 0}
-.row{display:flex;gap:10px}
-.row>*{flex:1;min-width:0}
-input[type=date]{min-width:0;-webkit-appearance:none;appearance:none;min-height:50px}
-
-.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;gap:4px}
-.seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:10px 4px;font-size:15px;font-weight:700;color:var(--muted)}
-.seg button[aria-pressed=true]{background:var(--accent);color:#fff}
-
-.detail-head{display:flex;gap:16px;margin-bottom:16px}
-.detail-head .cv{width:96px;flex:none}
-.detail-head h3{font:800 22px/1.15 var(--display);margin:0 0 4px}
-.detail-head p{margin:0;color:var(--muted);font-size:15px}
-
-.stars{display:flex;gap:4px}
-.stars button{border:0;background:transparent;padding:4px;font-size:34px;line-height:1;color:#C9D3CE}
-.stars button.on{color:var(--gold)}
-
+.sheet{width:100%;max-width:620px;max-height:92vh;overflow:auto;color:var(--ink);border-radius:6px 6px 0 0;
+  padding:30px 20px calc(26px + env(safe-area-inset-bottom,0px));
+  background-color:var(--card);background-image:var(--grain),linear-gradient(transparent 18px,#D9534F 18px 19px,transparent 19px),
+    repeating-linear-gradient(transparent 0 33px,rgba(80,120,200,.18) 33px 34px);animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(50px);opacity:.5}to{transform:none;opacity:1}}
+.sheet h2{font:24px/1.15 var(--type);margin:0 0 14px}
+.sheet h4{font:18px/1.2 var(--type);margin:26px 0 8px}
+.sheet-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sheet-top h2{margin:0;flex:1}
+.x{border:1.5px solid var(--ink);background:transparent;border-radius:3px;padding:6px 12px;font:15px/1 var(--type)}
+.hint{color:var(--ink-soft);font-size:15px;margin:0}
+label{display:block;font:15px/1.2 var(--type);margin:16px 0 6px;color:var(--ink-soft)}
+input[type=text],input[type=number],input[type=search],textarea{width:100%;border:0;border-bottom:2px solid var(--ink);background:rgba(255,255,255,.55);border-radius:3px 3px 0 0;padding:10px 10px;font:18px/1.3 var(--display)}
+input:focus,textarea:focus{outline:none;background:#fff;border-bottom-color:var(--stamp)}
+.btn{display:block;width:100%;border:0;background:var(--ink);color:var(--card);font:17px/1 var(--type);padding:15px 18px;border-radius:3px;margin-top:16px}
+.btn.line{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.drawer{display:grid;gap:10px}
+.drawer>button{display:flex;gap:14px;align-items:center;text-align:left;border:0;padding:16px;background:#fff;border-radius:2px;
+  box-shadow:0 2px 0 var(--paper-dk),0 4px 0 #D8C8A3;background-image:linear-gradient(transparent 8px,#D9534F 8px 9px,transparent 9px)}
+.drawer b{display:block;font:18px/1.2 var(--type)}
+.drawer small{color:var(--ink-soft);font-size:15px}
+.drawer .ico{width:42px;height:42px;flex:none;display:grid;place-items:center;color:var(--stamp)}
 .results{display:grid;gap:8px;margin-top:14px}
-#reader{width:100%;border-radius:14px;overflow:hidden;background:#000;min-height:220px}
-#reader video{border-radius:14px}
-.status{margin-top:12px;color:var(--muted);font-size:15px}
-.err{color:#B42344}
-
-.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-120%);
-  background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:40;transition:transform .25s,visibility .25s;visibility:hidden;max-width:90vw;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
-.spinner{display:inline-block;width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:6px}
+.res{display:flex;gap:12px;align-items:center;border:0;background:#fff;padding:9px 10px;border-radius:2px;text-align:left;box-shadow:0 2px 0 var(--paper-dk)}
+.res .thumb{width:42px;flex:none}
+.res b{display:block;font:600 16px/1.25 var(--display)}
+.res small{font:14px var(--type);color:var(--ink-soft)}
+#scanbox{width:100%;border-radius:4px;overflow:hidden;background:#000;min-height:220px}
+.status{margin-top:12px;color:var(--ink-soft);font-size:15px}
+.err{color:#B7322E}
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid var(--paper-dk);border-top-color:var(--stamp);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.toggle{display:flex;gap:8px;margin-top:6px}
+.toggle button{flex:1;border:1.5px solid var(--ink);background:transparent;padding:10px;font:15px/1 var(--type);border-radius:3px}
+.toggle button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+
+/* Kleine omslag (art) */
+.art{position:relative;aspect-ratio:2/3;width:100%;overflow:hidden;container-type:inline-size;background:var(--c);color:var(--t)}
+.art img{width:100%;height:100%;object-fit:cover}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.38) 0,rgba(0,0,0,.08) 4%,rgba(255,255,255,.18) 6%,rgba(255,255,255,0) 12%),
+    linear-gradient(160deg,rgba(255,255,255,.18),rgba(255,255,255,0) 40%)}
+.art.leather{background-image:var(--noise),radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.2),transparent 60%),var(--pat,linear-gradient(transparent,transparent));background-size:auto,auto,var(--patsize,auto)}
+.frame{position:absolute;inset:8% 8% 8% 13%;border:2px solid var(--line);outline:1px solid var(--line);outline-offset:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8%;gap:6%}
+.frame b{font:italic 700 11cqw/1.08 var(--display);text-shadow:0 1px 0 rgba(0,0,0,.4);overflow-wrap:anywhere}
+.frame span{font:600 6.5cqw/1.2 var(--display);font-variant:small-caps;letter-spacing:.06em;opacity:.9}
+.frame i{font-style:normal;font-size:9cqw;opacity:.8}
+
+/* ======= HET BOEK ======= */
+.bookov{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 30%,rgba(255,200,120,.16),transparent 60%),rgba(6,10,8,.86);opacity:0;transition:opacity .35s}
+.bookov.show{display:flex}
+.bookov.vis{opacity:1}
+.shut{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:5;border:0;border-radius:999px;padding:9px 16px;font:15px/1 var(--type);color:#3B2A12;
+  background:linear-gradient(180deg,#F3DA97,#C9A45C);box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.bvwrap{position:relative;transition:transform .55s cubic-bezier(.3,.7,.2,1),opacity .55s;will-change:transform}
+.bv{--bw:min(calc(100vw - 64px),400px);--bh:min(calc(100vh - 150px),calc(var(--bw) * 1.52),640px);
+  position:relative;width:var(--bw);height:var(--bh);perspective:2000px;transition:transform .6s cubic-bezier(.3,.7,.2,1);margin-right:24px}
+.bv.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translate(-3px,2px) rotate(-.6deg)}55%{transform:translate(3px,-1px) rotate(.4deg)}80%{transform:translate(-1px,1px)}}
+.board{position:absolute;inset:-7px -9px -7px -3px;border-radius:4px 10px 10px 4px;background-color:var(--c);
+  background-image:var(--noise),linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,0) 8%);box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.edges{position:absolute;inset:0;border-radius:2px 6px 6px 2px;background:var(--paper-dk);
+  box-shadow:1px 1px 0 #EFE4C9,2px 2px 0 #DDCFAE,3px 3px 0 #EFE4C9,4px 4px 0 #D3C39E,5px 5px 0 #E8DCBE}
+.leaf{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;
+  transition:transform .8s cubic-bezier(.45,.05,.25,1)}
+.bv.fast .leaf{transition-duration:.42s}
+.leaf.turned{transform:rotateY(-176deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:2px 7px 7px 2px;overflow:hidden}
+.face.back{transform:rotateY(180deg);border-radius:7px 2px 2px 7px}
+.face.endpaper{background-color:var(--c);background-image:var(--noise),
+  repeating-radial-gradient(circle at 28% 36%,rgba(255,255,255,.2) 0 5px,transparent 5px 13px),
+  repeating-radial-gradient(circle at 74% 68%,rgba(0,0,0,.18) 0 4px,transparent 4px 11px)}
+.face.paperback{background-color:var(--paper);background-image:var(--grain),linear-gradient(270deg,rgba(0,0,0,.16),rgba(0,0,0,0) 26px)}
+.face.cover .art{position:absolute;inset:0;aspect-ratio:auto;height:100%;cursor:pointer}
+.page{background-color:var(--paper);color:var(--ink);background-image:var(--grain),linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,0) 28px),radial-gradient(ellipse at 60% 35%,rgba(255,255,255,.4),transparent 70%);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:22px 20px 40px 30px}
+.runhead{font:italic 13px/1.2 var(--display);color:var(--ink-soft);text-align:center;margin-bottom:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant:small-caps;letter-spacing:.06em}
+.folio{text-align:center;font:italic 14px var(--display);color:var(--ink-soft);margin-top:28px}
+.tabs{position:absolute;left:100%;top:26px;display:flex;flex-direction:column;gap:5px;z-index:2;transition:opacity .4s}
+.bv.closed .tabs{opacity:0;pointer-events:none}
+.tab{border:0;writing-mode:vertical-rl;padding:12px 5px 12px 7px;border-radius:0 7px 7px 0;font:13px/1 var(--type);color:var(--ink);
+  box-shadow:2px 2px 3px rgba(0,0,0,.35);transition:padding .2s,transform .2s;transform:translateX(-4px)}
+.tab[aria-current=true]{padding-left:13px;transform:none;font-weight:700}
+.swipehint{font:20px/1.2 var(--hand);color:var(--stamp);text-align:center;margin-top:18px;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(-8px)}}
+
+/* Titelpagina */
+.tp{text-align:center;padding:10px 0 4px}
+.tp-au{font:600 15px/1.3 var(--display);font-variant:small-caps;letter-spacing:.12em;color:var(--ink-soft);margin:0 0 10px}
+.tp-title{font:italic 700 clamp(26px,8vw,34px)/1.08 var(--display);font-variation-settings:"opsz" 144;margin:0;overflow-wrap:anywhere}
+.orn{font-size:24px;color:var(--ribbon);margin:14px 0 8px}
+.tp-meta{font:14px var(--type);color:var(--ink-soft);margin:0}
+.tp-stars{color:#C8962F;font-size:22px;letter-spacing:4px;margin-top:8px}
+.where{font:15px var(--type);text-align:center;margin:26px 0 10px;color:var(--ink-soft)}
+.spots{display:grid;gap:9px}
+.spot{border:2px dashed rgba(43,29,20,.25);background:transparent;padding:11px;font:16px/1 var(--type);color:var(--ink-soft);border-radius:4px;transition:all .25s}
+.spot[aria-pressed=true]{border:3px double var(--stamp);color:var(--stamp);transform:rotate(-2deg);background:rgba(90,75,184,.06);font-weight:700}
+
+/* Bladwijzer */
+.markbig{text-align:center;margin-top:18px}
+.markbig .lbl{font:15px var(--type);color:var(--ink-soft)}
+.markbig .num{font:700 76px/1 var(--hand);color:var(--ink);margin:6px 0}
+.markbig .of{font:24px var(--hand);color:var(--ink-soft)}
+.page .ribbon-range::-webkit-slider-runnable-track{background:linear-gradient(90deg,var(--ribbon) var(--p,0%),rgba(43,29,20,.18) var(--p,0%))}
+.page .ribbon-range::-moz-range-track{background:rgba(43,29,20,.18)}
+.page .ribbon-range::-moz-range-progress{background:var(--ribbon)}
+.bigstamp{display:block;margin:26px auto 0;border:3px double var(--stamp);background:transparent;color:var(--stamp);font:22px/1 var(--type);padding:14px 22px;border-radius:5px;transform:rotate(-4deg);letter-spacing:.06em}
+.inline-num{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px;font:15px var(--type);color:var(--ink-soft)}
+.inline-num input{width:84px;text-align:center;padding:6px;font-size:17px}
+.linkbtn{display:block;margin:18px auto 0;border:0;background:none;font:20px var(--hand);color:var(--ink-soft);text-decoration:underline}
+
+/* Gedachten */
+.handh{font:700 28px/1.1 var(--hand);margin:6px 0 6px;color:var(--ink)}
+.lined{width:100%;border:0;background:transparent;resize:none;font:24px/34px var(--hand);color:#22305E;min-height:204px;padding:0 2px;
+  background-image:repeating-linear-gradient(transparent 0 33px,rgba(90,110,170,.35) 33px 34px);background-attachment:local;outline:none}
+.qlist{display:grid;gap:12px;margin-top:6px}
+.q{position:relative;font:italic 500 17px/1.45 var(--display);padding:4px 30px 4px 26px}
+.q::before{content:"“";position:absolute;left:0;top:-8px;font:700 40px/1 var(--display);color:var(--ribbon)}
+.q button{position:absolute;right:0;top:0;border:0;background:none;font-size:20px;color:var(--ink-soft);padding:2px 6px}
+.qadd{display:flex;gap:8px;margin-top:10px;align-items:flex-end}
+.qadd textarea{flex:1;min-height:52px;font:italic 16px/1.4 var(--display);border-bottom:1.5px solid var(--ink);background:rgba(255,255,255,.4);padding:8px}
+.qadd button{border:1.5px solid var(--ink);background:transparent;font:14px/1 var(--type);padding:10px;border-radius:3px;flex:none}
+
+/* Leeskaart in bibliotheekzakje */
+.pocket{position:relative;margin-top:44px;padding-top:0}
+.lcard{position:relative;z-index:1;background:#FCF8EE;border-radius:2px;padding:14px 14px 70px;font:15px/1.5 var(--type);color:var(--ink);
+  box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.lcard h5{font:18px/1 var(--type);margin:0 0 10px;text-align:center;letter-spacing:.2em;color:#B7322E}
+.lcard .r{display:flex;align-items:center;gap:8px;min-height:44px;border-bottom:1px solid rgba(43,29,20,.12)}
+.lcard .r>span:first-child{width:82px;flex:none;color:var(--ink-soft);font-size:14px}
+.pocketfront{position:relative;z-index:2;margin-top:-56px;height:84px;border-radius:0 0 4px 4px;background:#E6CF96;background-image:var(--grain);
+  box-shadow:0 -2px 3px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;font:14px var(--type);color:#6B5426;letter-spacing:.14em;
+  clip-path:polygon(0 18%,8% 0,92% 0,100% 18%,100% 100%,0 100%)}
+.stampwrap{position:relative;flex:1;min-height:40px;display:flex;align-items:center}
+.stampwrap input{position:absolute;inset:0;opacity:0;width:100%;height:100%;-webkit-appearance:none;appearance:none}
+.dstamp{display:inline-block;white-space:nowrap;font:17px/1 var(--type);color:var(--stamp);border:2px solid var(--stamp);padding:5px 9px 4px;border-radius:3px;transform:rotate(-5deg);opacity:.9;mix-blend-mode:multiply;letter-spacing:.08em}
+.dstamp.empty{border-style:dashed;opacity:.4;color:var(--ink-soft);border-color:var(--ink-soft);transform:none;font-size:13px}
+.dstamp.big{font-size:19px;border-width:3px;border-style:double;color:#B7322E;border-color:#B7322E}
+.slam{animation:slam .45s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes slam{0%{transform:scale(2.6) rotate(-16deg);opacity:0}55%{transform:scale(.9) rotate(-7deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:.92}}
+.rate{display:flex;gap:2px}
+.rate button{border:0;background:none;padding:2px 2px;font-size:25px;line-height:1;color:rgba(43,29,20,.2);transition:transform .15s}
+.rate button.on{color:#C8962F}
+.rate button:active{transform:scale(1.3)}
+.rate.ask{animation:ask 1.2s ease-in-out 3}
+@keyframes ask{50%{transform:scale(1.12)}}
+.designer{display:flex;gap:14px;align-items:flex-end;margin-top:8px}
+.minishelf{flex:none;height:150px;display:flex;align-items:flex-end;padding:0 10px 10px;border-radius:3px;background:var(--inside);
+  background-image:linear-gradient(to top,var(--wood-dk) 0 4px,var(--wood) 4px 10px,var(--wood-hi) 10px 11px,transparent 11px)}
+.sws{display:flex;flex-wrap:wrap;gap:7px}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid rgba(0,0,0,.15);padding:0;background-image:var(--noise)}
+.sw[aria-pressed=true]{box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--ink)}
+.pats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pats button{border:1.5px solid rgba(43,29,20,.3);background:transparent;border-radius:3px;padding:6px 9px;font:13px/1 var(--type)}
+.pats button[aria-pressed=true]{border-color:var(--stamp);color:var(--stamp);border-width:2px}
+.delbtn{display:block;margin:34px auto 0;border:0;background:none;font:14px var(--type);color:#9A3B34;text-decoration:underline}
+
+/* Leeskaart-jaar */
+.ledger{font:16px/1.9 var(--type)}
+.ledger div{display:flex;gap:6px;align-items:baseline}
+.ledger div i{flex:1;border-bottom:2px dotted rgba(43,29,20,.35);transform:translateY(-5px)}
+.ledger b{font-weight:400;font-size:19px}
+.months{display:flex;gap:4px;align-items:flex-end;min-height:120px;padding:10px 6px 0;background:var(--inside);border-radius:3px;
+  background-image:linear-gradient(to top,var(--wood-dk) 0 4px,var(--wood) 4px 12px,var(--wood-hi) 12px 13px,transparent 13px)}
+.mcol{flex:1;display:flex;flex-direction:column-reverse;align-items:center;padding-bottom:13px;gap:1px;position:relative;min-height:110px}
+.mcol i{display:block;width:88%;height:12px;border-radius:1px;background-color:var(--c);background-image:var(--noise),linear-gradient(rgba(255,255,255,.2),rgba(0,0,0,.3))}
+.mlab{display:flex;gap:4px;padding:4px 6px 0}
+.mlab span{flex:1;text-align:center;font:13px var(--type);color:var(--ink-soft)}
+.loans{display:grid;gap:2px}
+.loan{display:flex;gap:12px;align-items:center;border:0;background:none;text-align:left;padding:7px 2px;border-bottom:1px solid rgba(43,29,20,.12);width:100%}
+.loan .dstamp{font-size:13px;flex:none;width:104px;text-align:center}
+.loan b{font:600 16px/1.25 var(--display)}
+.vitrine{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.vit{background:#fff;border-radius:3px;padding:10px 4px;text-align:center;font:12px/1.3 var(--type);color:var(--ink-soft);box-shadow:0 2px 0 var(--paper-dk)}
+.vit .e{display:block;font-size:34px;line-height:1.2}
+.vit.locked .e{filter:grayscale(1) brightness(.3);opacity:.35}
+.vit b{display:block;font:600 14px var(--display);color:var(--ink)}
+
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));z-index:60;transform:translateX(-50%) translateY(-140%) rotate(-1deg);visibility:hidden;
+  background:var(--card);color:var(--ink);font:16px/1.35 var(--type);padding:12px 18px;border-radius:2px;box-shadow:0 8px 20px rgba(0,0,0,.4);
+  transition:transform .3s,visibility .3s;max-width:88vw;text-align:center;background-image:linear-gradient(transparent 6px,#D9534F 6px 7px,transparent 7px)}
+.toast.show{transform:translateX(-50%) translateY(0) rotate(-1deg);visibility:visible}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+@media (prefers-reduced-motion:reduce){
+  .leaf,.bvwrap,.bv,.spine,.groove i{transition:none!important}
+  .ribbon,.swipehint,.slam,.bv.shake,.deco.pop,.slab.land,.spine.shine,.sheet,.rate.ask{animation:none!important}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1 id="title">Mijn boekenkast</h1>
-    <button class="iconbtn" id="settingsBtn" aria-label="Instellingen">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    <button class="lamp" id="lampBtn" aria-label="Lamp aan of uit">
+      <svg width="52" height="60" viewBox="0 0 52 60" aria-hidden="true">
+        <rect x="14" y="52" width="24" height="6" rx="2" fill="#B48C43"/>
+        <rect x="24" y="30" width="4" height="23" fill="#C9A45C"/>
+        <path class="shade" d="M4 30 Q26 6 48 30 Z" fill="#1E6B4A"/>
+        <path d="M4 30 Q26 6 48 30" fill="none" stroke="#D9B66A" stroke-width="2"/>
+        <rect x="35" y="34" width="2" height="10" fill="#C9A45C"/><circle cx="36" cy="45" r="2.2" fill="#E3BC5B"/>
+      </svg>
+    </button>
+    <h1><span class="foil" id="title">Mijn bibliotheek</span></h1>
+    <button class="gear" id="settingsBtn" aria-label="Instellingen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
     </button>
   </header>
 
-  <section class="goal" id="goal"></section>
+  <button class="plaque" id="plaque"></button>
 
-  <h2>Nu aan het lezen</h2>
-  <div class="reading" id="reading"></div>
+  <h2 class="room">Op de leestafel</h2>
+  <div class="desk" id="desk"></div>
 
-  <h2>Gelezen</h2>
-  <div class="shelf" id="shelf"></div>
+  <h2 class="room">De boekenkast <button class="labelholder" id="sortLabel"><span>Op volgorde</span></button></h2>
+  <div class="case"><div class="shelf" id="shelf"></div></div>
 
-  <h2>Wil ik lezen</h2>
-  <div class="wish" id="wish"></div>
+  <h2 class="room">Mijn leesstapel</h2>
+  <div id="stackwrap"></div>
 </div>
 
-<button class="add" id="addBtn">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-  Boek toevoegen
-</button>
+<button class="newbook" id="newBtn">+ Nieuw boek</button>
 
 <div class="overlay" id="overlay"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+
+<div class="bookov" id="bookov" role="dialog" aria-modal="true" aria-label="Boek">
+  <button class="shut" id="shutBtn">Dichtdoen</button>
+  <div class="bvwrap" id="bvwrap"><div class="bv closed" id="bv"></div></div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <script src="html5-qrcode.min.js"></script>
 <script>
 "use strict";
 const KEY = "boekenkast-v1";
-const COLORS = ["#E8546B","#F3A73B","#3B82F6","#22A38A","#8B5CF6","#EF7D4F","#2F4B8F","#D9478F","#0E9AA7"];
+const COLORS = ["#8E2430","#B5442E","#C7832E","#D9B84A","#4F7A3A","#1F6B57","#1E6E7E","#2F5D9E","#22325E","#5B3F8C","#8C2F67","#3A2E2A"];
+const PATTERNS = [["plain","Glad"],["band","Ribbels"],["stripes","Strepen"],["dots","Stippen"]];
+const SORTS = [["datum","Op volgorde"],["regenboog","Regenboog"],["schrijver","Op schrijver"]];
+const MILESTONES = [[1,"🌱","Kiemplantje"],[5,"🪴","Kamerplant"],[10,"🕯️","Leeskaars"],[15,"🐈","Leeskat"],[20,"⏳","Zandloper"],[30,"🦉","Wijze uil"],[40,"🌍","Wereldbol"],[50,"🏆","Beker"],[75,"🐉","Draak"],[100,"👑","Kroon"]];
+const MAAND = ["JAN","FEB","MRT","APR","MEI","JUN","JUL","AUG","SEP","OKT","NOV","DEC"];
+const TABS = [["Titel","#F2D9A2"],["Bladwijzer","#E8A3A0"],["Gedachten","#A9CDB6"],["Leeskaart","#B9B5E6"]];
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
 const hash = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const thisYear = () => String(new Date().getFullYear());
+const byId = id => state.books.find(b => b.id === id);
+const authors = b => (b.authors || []).join(", ");
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const stampDate = d => { if (!d) return ""; const [y, m, dd] = d.split("-"); return `${+dd} ${MAAND[+m - 1]} ${y}`; };
 
 /* ---------- Opslag ---------- */
 let state = load();
 function load() {
+  const base = { name: "", goal: 20, light: "lamp", sound: true, sort: "datum", seen: [], swiped: false, books: [] };
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && Array.isArray(s.books)) return { name: "", goal: 20, ...s };
+    if (s && Array.isArray(s.books)) return { ...base, ...s };
   } catch (e) {}
-  return { name: "", goal: 20, books: [] };
+  return base;
 }
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(state)); }
@@ -191,119 +438,596 @@ function save() {
 }
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
 
-/* ---------- Hulpjes ---------- */
+/* ---------- Geluid (zelf opgewekt, geen bestanden) ---------- */
+let actx;
+function sfx(kind) {
+  if (!state.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+    const t = actx.currentTime;
+    const noise = (len, freq, q, vol, attack = .02) => {
+      const buf = actx.createBuffer(1, Math.floor(actx.sampleRate * len), actx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.2);
+      const src = actx.createBufferSource(); src.buffer = buf;
+      const f = actx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q;
+      const g = actx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      src.connect(f).connect(g).connect(actx.destination); src.start(t);
+    };
+    const tone = (f0, f1, len, vol, type = "sine", delay = 0) => {
+      const o = actx.createOscillator(), g = actx.createGain(); o.type = type;
+      o.frequency.setValueAtTime(f0, t + delay); o.frequency.exponentialRampToValueAtTime(f1, t + delay + len);
+      g.gain.setValueAtTime(0.0001, t + delay); g.gain.linearRampToValueAtTime(vol, t + delay + .01); g.gain.exponentialRampToValueAtTime(0.0001, t + delay + len);
+      o.connect(g).connect(actx.destination); o.start(t + delay); o.stop(t + delay + len + .05);
+    };
+    if (kind === "page") noise(.28, 2200 + Math.random() * 900, .6, .16, .06);
+    if (kind === "cover") { noise(.18, 700, .8, .25); tone(90, 55, .2, .25); }
+    if (kind === "stamp") { tone(140, 45, .22, .6); noise(.12, 1200, 1, .35, .005); }
+    if (kind === "done") { tone(784, 784, .5, .12, "triangle"); tone(1175, 1175, .7, .1, "triangle", .12); tone(1568, 1568, .9, .08, "triangle", .24); }
+    if (kind === "click") tone(1800, 1200, .05, .08, "square");
+  } catch (e) {}
+}
+
+/* ---------- Uiterlijk van een boek ---------- */
 function possessive(name) {
   const n = name.trim();
-  if (!n) return "Mijn boekenkast";
-  if (/[sxz]$/i.test(n)) return `${n}’ boekenkast`;
-  if (/[aeiouyéè]$/i.test(n)) return `${n}’s boekenkast`;
-  return `${n}s boekenkast`;
+  if (!n) return "Mijn bibliotheek";
+  if (/[sxz]$/i.test(n)) return `${n}’ bibliotheek`;
+  if (/[aeiouyéè]$/i.test(n)) return `${n}’s bibliotheek`;
+  return `${n}s bibliotheek`;
 }
-function coverHTML(b) {
-  const color = COLORS[hash(b.title) % COLORS.length];
-  const gen = `<div class="gen" style="background:${color}">${esc(b.title)}</div>`;
-  if (!b.cover) return `<div class="cv">${gen}</div>`;
-  return `<div class="cv"><img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML=this.dataset.fb" data-fb="${esc(gen)}"></div>`;
+function lum(hex) { const n = parseInt(hex.slice(1), 16); return 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255); }
+function hueSat(hex) {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; let h = 0;
+  if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return { h: (h * 60 + 360) % 360, s: mx ? d / mx : 0 };
 }
+function look(b) {
+  const h = hash(b.title + (b.isbn || ""));
+  const color = b.color || COLORS[h % COLORS.length];
+  const light = lum(color) > 165;
+  return { h, color, pattern: b.pattern || (h % 3 === 0 ? "band" : "plain"), font: h % 3,
+    text: light ? "#2B1D14" : "#F0D48A", line: light ? "rgba(43,29,20,.55)" : "#D9B66A" };
+}
+const vars = L => `--c:${L.color};--t:${L.text};--line:${L.line}`;
+function spineHTML(b, opts = {}) {
+  const L = look(b);
+  const w = Math.max(24, Math.min(48, Math.round((Number(b.pages) || 180) / 8.5)));
+  const ht = opts.height || (108 + (L.h % 24));
+  const attr = opts.preview ? 'tabindex="-1" aria-hidden="true"' : `data-open="${b.id}" aria-label="${esc(b.title)}"`;
+  return `<button class="spine p-${L.pattern} f${L.font}${b.rating === 5 ? " fav" : ""}" ${attr} style="${vars(L)};width:${w}px;height:${ht}px"><span>${esc(b.title)}</span></button>`;
+}
+function artHTML(b, large) {
+  const L = look(b);
+  const srcs = [];
+  if (large && b.isbn) srcs.push(`https://covers.openlibrary.org/b/isbn/${b.isbn}-L.jpg?default=false`);
+  if (b.cover) srcs.push(b.cover);
+  const frame = `<div class="frame"><b>${esc(b.title)}</b><i>❦</i><span>${esc(authors(b))}</span></div>`;
+  if (!srcs.length || b.leather) return `<div class="art leather p-${L.pattern === "band" ? "plain" : L.pattern}" style="${vars(L)}">${frame}</div>`;
+  return `<div class="art" style="${vars(L)}" data-frame="${esc(frame)}"><img src="${esc(srcs[0])}" data-srcs="${esc(srcs.slice(1).join("|"))}" alt="" referrerpolicy="no-referrer" onerror="coverErr(this)"></div>`;
+}
+window.coverErr = img => {
+  const rest = (img.dataset.srcs || "").split("|").filter(Boolean);
+  if (rest.length) { img.dataset.srcs = rest.slice(1).join("|"); img.src = rest[0]; return; }
+  const art = img.closest(".art"); if (!art) return;
+  const L = (art.getAttribute("style") || "");
+  art.classList.add("leather");
+  art.innerHTML = art.dataset.frame;
+};
 let toastTimer;
-function toast(msg) {
+function toast(msg, ms = 3000) {
   const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), ms);
 }
-const thisYear = () => String(new Date().getFullYear());
-const byId = id => state.books.find(b => b.id === id);
+const doneBooks = () => state.books.filter(b => b.status === "gelezen");
+function applyLight() {
+  document.documentElement.dataset.light = state.light === "dag" ? "dag" : "lamp";
+  $('meta[name=theme-color]').content = state.light === "dag" ? "#C9D8C4" : "#14291F";
+  $(".lamp .shade").setAttribute("fill", state.light === "dag" ? "#2F5A45" : "#1E6B4A");
+}
 
-/* ---------- Hoofdscherm ---------- */
+/* ---------- Het startscherm ---------- */
 function render() {
+  applyLight();
   $("#title").textContent = possessive(state.name);
   document.title = possessive(state.name);
 
   const year = thisYear();
-  const doneYear = state.books.filter(b => b.status === "gelezen" && (b.finished || "").startsWith(year));
-  const pages = doneYear.reduce((s, b) => s + (Number(b.pages) || 0), 0);
+  const doneYear = doneBooks().filter(b => (b.finished || "").startsWith(year));
   const goal = Math.max(1, Number(state.goal) || 1);
   const pct = Math.min(100, Math.round(doneYear.length / goal * 100));
-  $("#goal").innerHTML = `
-    <p class="big">${doneYear.length} van ${goal} boeken in ${year}</p>
-    <p class="sub">${pages ? `${pages.toLocaleString("nl-NL")} bladzijden gelezen` : "Elk uitgelezen boek telt mee voor je doel"}${doneYear.length >= goal ? " · Doel gehaald!" : ""}</p>
-    <div class="bar"><i style="width:${pct}%"></i></div>`;
+  $("#plaque").innerHTML = `<b>${doneYear.length} van de ${goal} boeken</b><span>${doneYear.length >= goal ? "Doel gehaald in " + year + "!" : "gelezen in " + year}</span><div class="groove"><i style="width:${pct}%"></i></div>`;
 
+  /* Leestafel */
   const reading = state.books.filter(b => b.status === "lezen");
-  $("#reading").innerHTML = reading.length ? reading.map(b => {
-    const p = Number(b.pages) || 0, cur = Math.min(Number(b.page) || 0, p || Infinity);
-    const pp = p ? Math.round(cur / p * 100) : 0;
-    return `<button class="rcard" data-open="${b.id}">
-      ${coverHTML(b)}
-      <div style="flex:1;min-width:0">
-        <h3>${esc(b.title)}</h3>
-        <p class="au">${esc((b.authors || []).join(", "))}</p>
-        ${p ? `<div class="pbar"><i style="width:${pp}%"></i></div><p class="pnum">Bladzijde ${cur} van ${p}</p>` : `<p class="pnum">Tik om je bladzijde bij te houden</p>`}
-      </div></button>`;
-  }).join("") : `<p class="hint">Je leest nu geen boek. Voeg er een toe met de knop onderin.</p>`;
+  $("#desk").innerHTML = reading.length ? reading.map(b => {
+    const p = Number(b.pages) || 0, cur = Math.min(Number(b.page) || 0, p || 99999);
+    const pc = p ? Math.round(cur / p * 100) : 0;
+    return `<div class="stand">
+      <button class="standbook" data-open="${b.id}" data-page="2" aria-label="${esc(b.title)} openslaan">${artHTML(b)}<span class="ribbon"></span></button>
+      <div class="sinfo">
+        <h3>${esc(b.title)}</h3><p class="au">${esc(authors(b))}</p>
+        ${p ? `<div class="pageno">blz. <span data-pnum="${b.id}">${cur}</span> <small>van ${p}</small></div>
+          <input class="ribbon-range" type="range" min="0" max="${p}" value="${cur}" data-slide="${b.id}" style="--p:${pc}%" aria-label="Bladzijde">`
+          : `<div class="pageno"><small>Hoe dik is dit boek? Sla het open.</small></div>`}
+        <button class="uit" data-finish="${b.id}">Uit!</button>
+      </div></div>`;
+  }).join("") : `<p class="empty-desk">De leestafel is leeg. Pak een boek van je stapel, of voeg een nieuw boek toe.</p>`;
+  $$("[data-slide]").forEach(el => {
+    el.oninput = () => { $(`[data-pnum="${el.dataset.slide}"]`).textContent = el.value; el.style.setProperty("--p", (el.value / el.max * 100) + "%"); };
+    el.onchange = () => { const b = byId(el.dataset.slide); b.page = +el.value; save(); if (b.pages && b.page >= b.pages) toast("Laatste bladzijde! Tik op Uit! als je het uit hebt."); };
+  });
 
-  const done = state.books.filter(b => b.status === "gelezen")
-    .sort((a, b) => (a.finished || "").localeCompare(b.finished || ""));
-  $("#shelf").innerHTML = done.length ? done.map(b => {
-    const h = hash(b.title + (b.isbn || ""));
-    const w = Math.max(24, Math.min(46, Math.round((Number(b.pages) || 180) / 9)));
-    const ht = 104 + (h % 26);
-    return `<div class="slot"><button class="spine${b.rating === 5 ? " fav" : ""}" data-open="${b.id}"
-      style="width:${w}px;height:${ht}px;background:${COLORS[h % COLORS.length]}" aria-label="${esc(b.title)}"><span>${esc(b.title)}</span></button></div>`;
-  }).join("") : `<div class="shelf-empty">Nog leeg. Als je een boek uit hebt, komt het hier te staan.</div>`;
+  /* Boekenkast */
+  $("#sortLabel span").textContent = (SORTS.find(s => s[0] === state.sort) || SORTS[0])[1];
+  const shelf = sortedDone();
+  const decoAt = new Map(MILESTONES.map(m => [m[0], m]));
+  $("#shelf").innerHTML = shelf.length ? shelf.map((b, i) => {
+    const m = decoAt.get(i + 1);
+    return `<div class="slot">${spineHTML(b)}</div>` + (m ? `<div class="slot"><span class="deco" data-deco="${m[0]}" role="img" aria-label="${m[2]}">${m[1]}</span></div>` : "");
+  }).join("") : `<div class="shelf-empty">Nog leeg. Elk boek dat je uit hebt, krijgt hier een plekje.</div>`;
 
-  const wish = state.books.filter(b => b.status === "wil");
-  $("#wish").innerHTML = wish.length ? wish.map(b => `
-    <button class="wrow" data-open="${b.id}">${coverHTML(b)}
-      <div style="min-width:0"><b>${esc(b.title)}</b><small>${esc((b.authors || []).join(", "))}</small></div></button>`).join("")
-    : `<p class="hint">Hoorde je over een leuk boek? Zet het hier, dan vergeet je het niet.</p>`;
+  /* Leesstapel */
+  const wish = state.books.filter(b => b.status === "wil").sort((a, b) => (b.added || "").localeCompare(a.added || ""));
+  $("#stackwrap").innerHTML = wish.length ? `<div class="stack">${wish.map(b => {
+    const L = look(b);
+    const h = Math.max(24, Math.min(40, Math.round((Number(b.pages) || 220) / 10)));
+    const w = 72 + (L.h % 22), off = ((L.h >> 3) % 9) - 4, rot = (((L.h >> 5) % 5) - 2) * .6;
+    return `<button class="slab p-${L.pattern}" data-open="${b.id}" style="${vars(L)};height:${h}px;width:${w}%;transform:translateX(${off}%) rotate(${rot}deg)"><span>${esc(b.title)}</span></button>`;
+  }).join("")}<div class="sidetable"></div><div class="sidelegs"></div></div>`
+    : `<p class="hintline">Hoorde je over een mooi boek? Leg het hier op je stapel, dan vergeet je het niet.</p>`;
 }
+function sortedDone() {
+  const d = doneBooks();
+  if (state.sort === "regenboog") {
+    const key = b => { const { h, s } = hueSat(look(b).color); return s < 0.25 ? 999 : (h + 20) % 360; };
+    return d.sort((a, b) => key(a) - key(b));
+  }
+  if (state.sort === "schrijver") {
+    const key = b => { const a = ((b.authors || [])[0] || "~").trim(); return a.split(/\s+/).pop() + " " + a; };
+    return d.sort((a, b) => key(a).localeCompare(key(b), "nl"));
+  }
+  return d.sort((a, b) => (a.finished || "").localeCompare(b.finished || "") || (a.added || "").localeCompare(b.added || ""));
+}
+$("#sortLabel").onclick = () => {
+  const i = SORTS.findIndex(s => s[0] === state.sort);
+  state.sort = SORTS[(i + 1) % SORTS.length][0]; save(); sfx("click"); render();
+};
+$("#lampBtn").onclick = () => { state.light = state.light === "dag" ? "lamp" : "dag"; save(); sfx("click"); applyLight(); };
+$("#plaque").onclick = openLedger;
+
 document.addEventListener("click", e => {
+  if (e.target.closest(".sheet") || e.target.closest("#bookov")) return;
+  const f = e.target.closest("[data-finish]");
+  if (f) { const b = byId(f.dataset.finish); const src = $(`.standbook[data-open="${b.id}"]`); markDone(b); openBook(b.id, { from: src, page: 4, finishing: true }); return; }
   const o = e.target.closest("[data-open]");
-  if (o && !o.closest(".sheet")) openDetail(o.dataset.open);
+  if (!o) return;
+  const page = +(o.dataset.page || 1);
+  if (o.classList.contains("spine") && !reduceMotion) {
+    o.classList.add("pull"); sfx("click");
+    setTimeout(() => { openBook(o.dataset.open, { from: o, page }); setTimeout(() => o.classList.remove("pull"), 300); }, 190);
+  } else openBook(o.dataset.open, { from: o, page });
 });
 
-/* ---------- Sheet ---------- */
-let onClose = null;
+/* ---------- Uitlezen ---------- */
+let justShelved = null;
+function markDone(b) {
+  b.status = "gelezen";
+  if (!b.finished) b.finished = today();
+  if (!b.started) b.started = b.added || "";
+  if (b.pages) b.page = b.pages;
+  justShelved = b.id;
+  save();
+}
+function celebrate(el) {
+  const id = justShelved; justShelved = null;
+  const count = doneBooks().length;
+  const m = MILESTONES.find(x => x[0] === count && !state.seen.includes(x[0]));
+  if (m) { state.seen.push(m[0]); save(); }
+  const n = doneBooks().filter(b => (b.finished || "").startsWith(thisYear())).length;
+  sfx("done");
+  if (el) { el.classList.add("shine"); setTimeout(() => el.classList.remove("shine"), 1500); if (!reduceMotion) sparkle(el.getBoundingClientRect()); }
+  if (m) { const d = $(`[data-deco="${m[0]}"]`); if (d) d.classList.add("pop"); }
+  toast(m ? `Er staat iets nieuws in je kast: ${m[2].toLowerCase()} ${m[1]}` : `In de kast gezet! Boek ${n} van ${thisYear()}.`, 3800);
+}
+function sparkle(rect) {
+  const c = $("#fx"), ctx = c.getContext("2d"), dpr = devicePixelRatio || 1;
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 3;
+  const cols = ["#F7DC8A", "#E9C977", "#FFF3C9", "#C9A45C", "#FFFFFF"];
+  const P = Array.from({ length: 90 }, () => {
+    const a = Math.random() * Math.PI * 2, v = Math.random() * 7 + 2;
+    return { x: cx, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 3, r: Math.random() * 2.6 + 1, c: cols[Math.floor(Math.random() * cols.length)], s: Math.random() < .35 };
+  });
+  let t = 0;
+  (function frame() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (const p of P) {
+      p.vy += .16; p.vx *= .975; p.vy *= .985; p.x += p.vx; p.y += p.vy;
+      ctx.globalAlpha = Math.max(0, 1 - t / 80); ctx.fillStyle = p.c;
+      if (p.s) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(t / 6); ctx.fillRect(-p.r * 1.6, -.6, p.r * 3.2, 1.2); ctx.fillRect(-.6, -p.r * 1.6, 1.2, p.r * 3.2); ctx.restore(); }
+      else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }
+    }
+    if (++t < 80) requestAnimationFrame(frame); else ctx.clearRect(0, 0, innerWidth, innerHeight);
+  })();
+}
+
+/* ====================================================================
+   HET BOEK: openslaan, bladeren, dichtdoen
+   ==================================================================== */
+let bookId = null, leaves = [], cur = 0, zTimer, busyBook = false;
+const N = 5; // omslag + 4 bladzijden
+
+function rectOf(el) { if (!el) return null; const r = el.getBoundingClientRect(); return r.width ? r : null; }
+function flipFrom(r) {
+  const wrap = $("#bvwrap");
+  wrap.style.transition = "none";
+  if (!r || reduceMotion) { wrap.style.transform = "translateY(30px) scale(.9)"; wrap.style.opacity = "0"; }
+  else {
+    const b = $("#bv").getBoundingClientRect();
+    wrap.style.transform = `translate(${r.left + r.width / 2 - (b.left + b.width / 2)}px,${r.top + r.height / 2 - (b.top + b.height / 2)}px) scale(${r.width / b.width},${r.height / b.height})`;
+    wrap.style.opacity = ".6";
+  }
+  void wrap.offsetWidth;
+  wrap.style.transition = "";
+  wrap.style.transform = ""; wrap.style.opacity = "1";
+}
+function flipTo(r) {
+  const wrap = $("#bvwrap");
+  if (!r || reduceMotion) { wrap.style.transform = "translateY(30px) scale(.9)"; wrap.style.opacity = "0"; return; }
+  wrap.style.transform = "none";
+  const b = $("#bv").getBoundingClientRect();
+  wrap.style.transform = `translate(${r.left + r.width / 2 - (b.left + b.width / 2)}px,${r.top + r.height / 2 - (b.top + b.height / 2)}px) scale(${r.width / b.width},${r.height / b.height})`;
+  wrap.style.opacity = ".3";
+}
+
+async function openBook(id, { from = null, page = 1, finishing = false } = {}) {
+  const b = byId(id); if (!b || busyBook) return;
+  busyBook = true;
+  if (!Array.isArray(b.quotes)) b.quotes = [];
+  bookId = id;
+  buildBook(b);
+  const ov = $("#bookov");
+  ov.classList.add("show"); document.body.style.overflow = "hidden";
+  flipFrom(rectOf(from));
+  requestAnimationFrame(() => ov.classList.add("vis"));
+  await wait(reduceMotion ? 50 : 600);
+  sfx("cover");
+  goTo(page);
+  busyBook = false;
+  if (finishing) { await wait(reduceMotion ? 50 : (page * 150 + 800)); stampFinished(); }
+}
+
+function buildBook(b) {
+  const L = look(b);
+  const bv = $("#bv");
+  bv.className = "bv closed";
+  bv.style.cssText = vars(L);
+  bv.innerHTML = `<div class="board"></div><div class="edges"></div>` +
+    Array.from({ length: N }, (_, i) => `<div class="leaf" data-i="${i}">
+      <div class="face front ${i === 0 ? "cover" : "page"}" data-face="${i}"></div>
+      <div class="face back ${i === 0 ? "endpaper" : "paperback"}"></div></div>`).join("") +
+    `<nav class="tabs">${TABS.map(([t, c], i) => `<button class="tab" data-tab="${i + 1}" style="background:${c}">${t}</button>`).join("")}</nav>`;
+  leaves = $$("#bv .leaf");
+  cur = 0; settleZ();
+  for (let i = 0; i < N; i++) fill(i);
+}
+function settleZ() { leaves.forEach((el, i) => { el.style.zIndex = i < cur ? 10 + i : 100 + (N - i); }); }
+function goTo(n, fast) {
+  n = Math.max(0, Math.min(N - 1, n));
+  if (n === cur) { updateTabs(); return; }
+  const dir = n > cur ? 1 : -1, seq = [];
+  if (dir > 0) for (let i = cur; i < n; i++) seq.push(i); else for (let i = cur - 1; i >= n; i--) seq.push(i);
+  const gap = fast ? 70 : 150;
+  $("#bv").classList.toggle("fast", !!fast);
+  seq.forEach((i, k) => setTimeout(() => {
+    leaves[i].style.zIndex = 900 + k;
+    leaves[i].classList.toggle("turned", dir > 0);
+    if (!fast) sfx(i === 0 ? "cover" : "page");
+  }, k * gap));
+  cur = n;
+  clearTimeout(zTimer); zTimer = setTimeout(settleZ, seq.length * gap + 850);
+  updateTabs();
+}
+function updateTabs() {
+  $("#bv").classList.toggle("closed", cur === 0);
+  $$("#bv .tab").forEach(t => t.setAttribute("aria-current", +t.dataset.tab === cur));
+}
+async function closeBook({ remove = false } = {}) {
+  if (!bookId || busyBook) return;
+  busyBook = true;
+  const id = bookId;
+  const turned = cur;
+  goTo(0, true);
+  await wait(reduceMotion ? 0 : (turned ? turned * 70 + 460 : 0));
+  render();
+  let target = null;
+  if (!remove) {
+    target = $(`.spine[data-open="${id}"]`) || $(`.standbook[data-open="${id}"]`) || $(`.slab[data-open="${id}"]`);
+    if (target) {
+      const r = target.getBoundingClientRect();
+      if (r.top < 60 || r.bottom > innerHeight - 90) window.scrollTo(0, r.top + scrollY - innerHeight / 2 + r.height / 2);
+    }
+  }
+  flipTo(rectOf(target));
+  $("#bookov").classList.remove("vis");
+  await wait(reduceMotion ? 60 : 560);
+  $("#bookov").classList.remove("show");
+  $("#bvwrap").style.transform = ""; $("#bvwrap").style.opacity = "";
+  document.body.style.overflow = "";
+  bookId = null; busyBook = false;
+  if (justShelved === id && !remove) celebrate(target);
+  else if (target && target.classList.contains("slab") && !reduceMotion) { target.classList.add("land"); }
+}
+$("#shutBtn").onclick = () => closeBook();
+
+/* Bladeren: vegen, tabbladen, tikken op de omslag */
+(() => {
+  const bv = $("#bv"); let sx = 0, sy = 0, st = 0, ok = false;
+  bv.addEventListener("pointerdown", e => {
+    ok = !e.target.closest("input,textarea,.rate,.sws,.pats");
+    sx = e.clientX; sy = e.clientY; st = Date.now();
+  });
+  bv.addEventListener("pointerup", e => {
+    if (!ok) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - st < 900) {
+      if (dx < 0 && cur < N - 1) goTo(cur + 1);
+      else if (dx > 0 && cur > 1) goTo(cur - 1);
+      if (!state.swiped) { state.swiped = true; save(); const h = $("#bv .swipehint"); if (h) h.remove(); }
+    }
+  });
+})();
+
+/* ---------- De bladzijden ---------- */
+function fill(i) {
+  const b = byId(bookId); if (!b) return;
+  const face = $(`#bv [data-face="${i}"]`); if (!face) return;
+  const keep = face.scrollTop;
+  face.innerHTML = [pageCover, pageTitle, pageMark, pageThoughts, pageCard][i](b);
+  face.scrollTop = keep;
+  if (i === 2) bindMark(b);
+  if (i === 3) bindThoughts(b);
+  if (i === 4) bindCard(b);
+}
+const runhead = b => `<div class="runhead">${esc(b.title)}</div>`;
+const folio = n => `<div class="folio">— ${n} —</div>`;
+
+function pageCover(b) { return artHTML(b, true); }
+
+function pageTitle(b) {
+  const spot = (v, t) => `<button class="spot" data-status="${v}" aria-pressed="${b.status === v}">${t}</button>`;
+  return `${runhead(b)}
+    <div class="tp">
+      ${authors(b) ? `<p class="tp-au">${esc(authors(b))}</p>` : ""}
+      <h2 class="tp-title">${esc(b.title)}</h2>
+      <div class="orn">❦</div>
+      <p class="tp-meta">${esc([b.pages ? b.pages + " bladzijden" : "", b.year].filter(Boolean).join(", ")) || "&nbsp;"}</p>
+      ${b.status === "gelezen" && b.rating ? `<div class="tp-stars">${"★".repeat(b.rating)}</div>` : ""}
+    </div>
+    <p class="where">Waar ligt dit boek?</p>
+    <div class="spots">${spot("wil", "Op mijn leesstapel")}${spot("lezen", "Op de leestafel")}${spot("gelezen", "In de kast: uitgelezen")}</div>
+    ${state.swiped ? "" : `<p class="swipehint">veeg om te bladeren ←</p>`}
+    ${folio(1)}`;
+}
+
+function pageMark(b) {
+  if (b.status === "lezen") {
+    const p = Number(b.pages) || 0, c = Math.min(Number(b.page) || 0, p || 99999);
+    return `${runhead(b)}
+      <div class="markbig"><div class="lbl">Mijn leeslint ligt op</div>
+        <div class="num">blz. <span id="mkNum">${c}</span></div>
+        ${p ? `<div class="of">van de ${p}</div>` : ""}</div>
+      ${p ? `<input class="ribbon-range" type="range" id="mkRange" min="0" max="${p}" value="${c}" style="--p:${c / p * 100}%" aria-label="Bladzijde">` : ""}
+      <div class="inline-num"><span>blz.</span><input type="number" id="mkPage" inputmode="numeric" min="0" value="${c || ""}" aria-label="Bladzijde">
+        <span>van</span><input type="number" id="mkPages" inputmode="numeric" min="1" value="${p || ""}" aria-label="Aantal bladzijden"></div>
+      <button class="bigstamp" id="mkDone">Uit!</button>
+      ${folio(2)}`;
+  }
+  if (b.status === "gelezen") return `${runhead(b)}
+      <div class="markbig"><div class="lbl">Dit boek is</div><div class="num" style="font-size:58px">uitgelezen!</div>
+      <div class="of">${b.pages ? `alle ${b.pages} bladzijden` : ""}${b.finished ? `<br>op ${stampDate(b.finished).toLowerCase()}` : ""}</div></div>
+      <button class="linkbtn" id="mkUndo">Toch nog niet uit? Terug naar de leestafel</button>
+      ${folio(2)}`;
+  return `${runhead(b)}
+      <div class="markbig"><div class="lbl">Het leeslint ligt nog</div><div class="num" style="font-size:58px">voorin</div>
+      <div class="of">Dit boek ligt op je stapel.</div></div>
+      <button class="bigstamp" id="mkStart" style="transform:rotate(-2deg)">Begin met lezen</button>
+      ${folio(2)}`;
+}
+function bindMark(b) {
+  const r = $("#mkRange"), num = $("#mkNum"), pg = $("#mkPage"), ps = $("#mkPages");
+  if (r) {
+    r.oninput = () => { num.textContent = r.value; pg.value = r.value; r.style.setProperty("--p", r.value / r.max * 100 + "%"); };
+    r.onchange = () => { b.page = +r.value; save(); if (b.pages && b.page >= b.pages) toast("Laatste bladzijde! Tik op Uit! als je het uit hebt."); };
+  }
+  if (pg) pg.oninput = () => { b.page = Math.max(0, parseInt(pg.value) || 0); num.textContent = b.page; if (r) { r.value = b.page; r.style.setProperty("--p", b.page / r.max * 100 + "%"); } save(); };
+  if (ps) ps.onchange = () => { b.pages = parseInt(ps.value) || null; save(); fill(1); fill(2); };
+  const d = $("#mkDone"); if (d) d.onclick = finishInBook;
+  const u = $("#mkUndo"); if (u) u.onclick = () => setStatus(b, "lezen");
+  const s = $("#mkStart"); if (s) s.onclick = () => { setStatus(b, "lezen"); toast("Op de leestafel gelegd. Veel leesplezier!"); };
+}
+
+function pageThoughts(b) {
+  const head = b.status === "gelezen" ? "Wat vond ik ervan?" : b.status === "lezen" ? "Wat is er al gebeurd?" : "Waarom wil ik dit lezen?";
+  const ph = b.status === "gelezen" ? "Wie was je favoriet? Zou je het nog eens lezen?" : b.status === "lezen" ? "Schrijf hier wat je denkt…" : "Een tip van iemand? Mooie kaft?";
+  return `${runhead(b)}
+    <div class="handh">${head}</div>
+    <textarea class="lined" id="thRv" placeholder="${ph}">${esc(b.review)}</textarea>
+    ${b.status !== "wil" ? `<div class="handh" style="margin-top:22px">Mooie zinnen</div>
+    <div class="qlist" id="qlist">${b.quotes.map((q, i) => `<div class="q">${esc(q)}<button data-qdel="${i}" aria-label="Zin weghalen">×</button></div>`).join("")}</div>
+    <div class="qadd"><textarea id="qNew" placeholder="Een zin die je mooi, grappig of spannend vond"></textarea><button id="qAdd">Bewaar</button></div>` : ""}
+    ${folio(3)}`;
+}
+function bindThoughts(b) {
+  const t = $("#thRv");
+  const grow = () => { t.style.height = "auto"; t.style.height = Math.max(204, Math.ceil(t.scrollHeight / 34) * 34) + "px"; };
+  t.oninput = () => { b.review = t.value; save(); grow(); }; grow();
+  const add = $("#qAdd");
+  if (add) add.onclick = () => { const v = $("#qNew").value.trim(); if (!v) { $("#qNew").focus(); return; } b.quotes.push(v); save(); sfx("click"); fill(3); };
+  $$("#bv [data-qdel]").forEach(el => el.onclick = () => { b.quotes.splice(+el.dataset.qdel, 1); save(); fill(3); });
+}
+
+function pageCard(b) {
+  const stamp = (key, val, big) => `<span class="stampwrap"><span class="dstamp${val ? (big ? " big" : "") : " empty"}" data-stamp="${key}">${val ? stampDate(val) : "tik om te stempelen"}</span>
+    <input type="date" data-date="${key}" value="${val || ""}" aria-label="${key === "started" ? "Begonnen op" : "Uitgelezen op"}"></span>`;
+  return `${runhead(b)}
+    <div class="pocket">
+      <div class="lcard">
+        <h5>LEESKAART</h5>
+        <div class="r"><span>Titel</span><span>${esc(b.title)}</span></div>
+        <div class="r"><span>Schrijver</span><span>${esc(authors(b)) || "?"}</span></div>
+        <div class="r"><span>Erbij</span><span>${b.added ? stampDate(b.added) : "?"}</span></div>
+        ${b.status !== "wil" ? `<div class="r"><span>Begonnen</span>${stamp("started", b.started)}</div>` : ""}
+        ${b.status === "gelezen" ? `<div class="r"><span>Uitgelezen</span>${stamp("finished", b.finished, true)}</div>
+        <div class="r"><span>Sterren</span><div class="rate" id="rate">${[1,2,3,4,5].map(n => `<button data-r="${n}" class="${n <= b.rating ? "on" : ""}" aria-label="${n} ster${n > 1 ? "ren" : ""}">★</button>`).join("")}</div></div>` : ""}
+      </div>
+      <div class="pocketfront">BIBLIOTHEEK ${esc((state.name || "").toUpperCase())}</div>
+    </div>
+    <div class="handh" style="margin-top:26px">Zo staat hij in mijn kast</div>
+    <div class="designer"><div class="minishelf" id="mini"></div>
+      <div style="min-width:0"><div class="sws">${COLORS.map(c => `<button class="sw" data-c="${c}" style="background-color:${c}" aria-label="Kleur"></button>`).join("")}</div>
+      <div class="pats">${PATTERNS.map(([k, t]) => `<button data-p="${k}">${t}</button>`).join("")}</div></div></div>
+    <button class="delbtn" id="delBook">Boek uit mijn bibliotheek halen</button>
+    ${folio(4)}`;
+}
+function bindCard(b) {
+  const drawMini = () => {
+    $("#mini").innerHTML = spineHTML(b, { preview: true, height: 128 });
+    const L = look(b);
+    $$("#bv [data-c]").forEach(x => x.setAttribute("aria-pressed", x.dataset.c === L.color));
+    $$("#bv [data-p]").forEach(x => x.setAttribute("aria-pressed", x.dataset.p === L.pattern));
+  };
+  drawMini();
+  $$("#bv [data-c]").forEach(el => el.onclick = () => { b.color = el.dataset.c; save(); sfx("click"); drawMini(); recolor(b); });
+  $$("#bv [data-p]").forEach(el => el.onclick = () => { b.pattern = el.dataset.p; save(); sfx("click"); drawMini(); recolor(b); });
+  $$("#bv [data-r]").forEach(el => el.onclick = () => {
+    const r = +el.dataset.r; b.rating = b.rating === r ? 0 : r; save(); sfx("click");
+    $$("#bv [data-r]").forEach(x => x.classList.toggle("on", +x.dataset.r <= b.rating));
+    $("#rate").classList.remove("ask"); drawMini(); fill(1);
+    if (b.rating === 5) toast("Een favoriet! Hij krijgt een gouden sterretje op zijn rug.");
+  });
+  $$("#bv [data-date]").forEach(el => el.onchange = () => {
+    b[el.dataset.date] = el.value; save();
+    const s = $(`#bv [data-stamp="${el.dataset.date}"]`);
+    s.className = "dstamp" + (el.value ? (el.dataset.date === "finished" ? " big" : "") : " empty");
+    s.textContent = el.value ? stampDate(el.value) : "tik om te stempelen";
+    if (el.value) { sfx("stamp"); s.classList.add("slam"); }
+  });
+  $("#delBook").onclick = () => {
+    if (!confirm(`"${b.title}" uit je bibliotheek halen?`)) return;
+    state.books = state.books.filter(x => x.id !== b.id); save();
+    if (justShelved === b.id) justShelved = null;
+    closeBook({ remove: true }).then(() => toast("Boek weggehaald"));
+  };
+}
+function recolor(b) {
+  const L = look(b); $("#bv").style.cssText = vars(L);
+  fill(0);
+}
+
+/* Status en uitlezen in het boek */
+$("#bv").addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]");
+  if (t) { goTo(+t.dataset.tab); sfx("click"); if (!state.swiped) { state.swiped = true; save(); } return; }
+  if (cur === 0 && e.target.closest(".cover")) { goTo(1); return; }
+  const s = e.target.closest("[data-status]");
+  if (s) {
+    const b = byId(bookId);
+    if (s.dataset.status === "gelezen") { if (b.status !== "gelezen") finishInBook(); return; }
+    setStatus(b, s.dataset.status);
+  }
+});
+function setStatus(b, st) {
+  if (st === b.status) return;
+  b.status = st;
+  if (st !== "gelezen") { b.finished = ""; if (justShelved === b.id) justShelved = null; }
+  if (st === "lezen" && !b.started) b.started = today();
+  if (st === "wil") b.started = "";
+  save(); sfx("click");
+  for (let i = 1; i < N; i++) fill(i);
+}
+async function finishInBook() {
+  const b = byId(bookId);
+  markDone(b);
+  for (let i = 1; i < N; i++) fill(i);
+  goTo(4);
+  await wait(reduceMotion ? 50 : 900);
+  stampFinished();
+}
+function stampFinished() {
+  const s = $('#bv [data-stamp="finished"]'); if (!s) return;
+  const face = $('#bv [data-face="4"]');
+  face.scrollTop = Math.max(0, s.offsetTop - 140);
+  s.classList.remove("slam"); void s.offsetWidth; s.classList.add("slam");
+  setTimeout(() => {
+    sfx("stamp");
+    if (navigator.vibrate) navigator.vibrate([30, 30, 70]);
+    const bv = $("#bv"); bv.classList.remove("shake"); void bv.offsetWidth; bv.classList.add("shake");
+    const r = $("#rate"); if (r) r.classList.add("ask");
+    toast("Uitgelezen! Hoeveel sterren geef je het?");
+  }, 180);
+}
+
+/* ---------- Kaarten (sheets) ---------- */
+let onSheetClose = null;
 function openSheet(html, closeFn) {
-  $("#sheet").innerHTML = html;
-  $("#overlay").classList.add("open");
-  document.body.style.overflow = "hidden";
-  onClose = closeFn || null;
+  $("#sheet").innerHTML = html; $("#sheet").scrollTop = 0;
+  $("#overlay").classList.add("open"); document.body.style.overflow = "hidden";
+  onSheetClose = closeFn || null;
 }
 async function closeSheet() {
-  if (onClose) { const f = onClose; onClose = null; await f(); }
-  $("#overlay").classList.remove("open");
-  document.body.style.overflow = "";
+  if (onSheetClose) { const f = onSheetClose; onSheetClose = null; await f(); }
+  $("#overlay").classList.remove("open"); document.body.style.overflow = "";
   render();
 }
 $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeSheet(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#overlay").classList.contains("open")) closeSheet(); });
-const sheetTop = title => `<div class="sheet-top"><h2>${title}</h2><button class="close" onclick="closeSheet()">Sluiten</button></div>`;
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#overlay").classList.contains("open")) closeSheet();
+  else if (bookId) closeBook();
+  else return;
+});
+document.addEventListener("keydown", e => {
+  if (!bookId || e.target.closest("input,textarea")) return;
+  if (e.key === "ArrowRight" && cur < N - 1) goTo(cur + 1);
+  if (e.key === "ArrowLeft" && cur > 1) goTo(cur - 1);
+});
+const sheetTop = title => `<div class="sheet-top"><h2>${title}</h2><button class="x" onclick="closeSheet()">Sluiten</button></div>`;
 
-/* ---------- Welkom & instellingen ---------- */
+/* Welkom en instellingen */
 function openWelcome() {
-  openSheet(`<h2>Hoi! Hoe heet je?</h2>
-    <p class="hint">Dan zetten we je naam boven je boekenkast.</p>
-    <label for="wName">Je naam</label><input type="text" id="wName" autocomplete="given-name">
+  openSheet(`<h2>Welkom in je eigen bibliotheek</h2>
+    <p class="hint">Elk boek dat je leest krijgt hier een plek. Eerst even kennismaken.</p>
+    <label for="wName">Hoe heet je?</label><input type="text" id="wName" autocomplete="given-name">
     <label for="wGoal">Hoeveel boeken wil je dit jaar lezen?</label><input type="number" id="wGoal" inputmode="numeric" min="1" value="${state.goal}">
-    <button class="btn" id="wGo">Beginnen</button>`);
+    <button class="btn" id="wGo">Open mijn bibliotheek</button>`);
   $("#wGo").onclick = () => {
     state.name = $("#wName").value.trim();
     state.goal = Math.max(1, parseInt($("#wGoal").value) || 20);
-    save(); closeSheet();
+    save(); sfx("done"); closeSheet();
   };
 }
 $("#settingsBtn").onclick = () => {
+  const tg = (key, a, b) => `<div class="toggle" data-tg="${key}">${a.map((x, i) => `<button data-v="${b[i]}" aria-pressed="${String(state[key]) === String(b[i])}">${x}</button>`).join("")}</div>`;
   openSheet(`${sheetTop("Instellingen")}
-    <label for="sName">Je naam</label><input type="text" id="sName" value="${esc(state.name)}">
+    <label for="sName">Naam op het bordje</label><input type="text" id="sName" value="${esc(state.name)}">
     <label for="sGoal">Boeken lezen in ${thisYear()}</label><input type="number" id="sGoal" inputmode="numeric" min="1" value="${state.goal}">
-    <h2 style="margin-top:28px">Back-up</h2>
+    <label>Licht</label>${tg("light", ["Lamp aan", "Daglicht"], ["lamp", "dag"])}
+    <label>Geluid</label>${tg("sound", ["Aan", "Uit"], [true, false])}
+    <h4>Back-up</h4>
     <p class="hint">Je boeken staan alleen op deze telefoon. Maak af en toe een back-up, dan raak je ze nooit kwijt.</p>
     <button class="btn" id="exp">Back-up maken</button>
-    <button class="btn ghost" id="impBtn">Back-up terugzetten</button>
+    <button class="btn line" id="impBtn">Back-up terugzetten</button>
     <input type="file" id="imp" accept="application/json,.json" hidden>`);
   $("#sName").oninput = e => { state.name = e.target.value; save(); $("#title").textContent = possessive(state.name); };
   $("#sGoal").oninput = e => { const v = parseInt(e.target.value); if (v > 0) { state.goal = v; save(); } };
+  $$("[data-tg] button").forEach(btn => btn.onclick = () => {
+    const key = btn.parentNode.dataset.tg; let v = btn.dataset.v; if (v === "true") v = true; if (v === "false") v = false;
+    state[key] = v; save(); applyLight(); sfx("click");
+    btn.parentNode.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+  });
   $("#exp").onclick = exportData;
   $("#impBtn").onclick = () => $("#imp").click();
   $("#imp").onchange = importData;
@@ -311,8 +1035,7 @@ $("#settingsBtn").onclick = () => {
 function exportData() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `boekenkast-backup-${today()}.json`;
+  a.href = URL.createObjectURL(blob); a.download = `bibliotheek-backup-${today()}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   toast("Back-up gemaakt");
@@ -324,11 +1047,50 @@ function importData(e) {
     try {
       const d = JSON.parse(r.result);
       if (!d || !Array.isArray(d.books)) throw 0;
-      if (!confirm(`Deze back-up heeft ${d.books.length} boeken. Wil je je huidige boekenkast hiermee vervangen?`)) return;
-      state = { name: "", goal: 20, ...d }; save(); closeSheet(); toast("Back-up teruggezet");
-    } catch (err) { toast("Dit bestand is geen back-up van de boekenkast"); }
+      if (!confirm(`Deze back-up heeft ${d.books.length} boeken. Wil je je huidige bibliotheek hiermee vervangen?`)) return;
+      localStorage.setItem(KEY, JSON.stringify(d)); state = load(); save(); closeSheet(); toast("Back-up teruggezet");
+    } catch (err) { toast("Dit bestand is geen back-up van de bibliotheek"); }
   };
   r.readAsText(f);
+}
+
+/* ---------- Leeskaart van het jaar ---------- */
+function openLedger() {
+  const year = thisYear(), all = doneBooks();
+  const yr = all.filter(b => (b.finished || "").startsWith(year)).sort((a, b) => a.finished.localeCompare(b.finished));
+  const pages = yr.reduce((s, b) => s + (Number(b.pages) || 0), 0);
+  const stack = pages * 0.005;
+  const cnt = {}; all.forEach(b => (b.authors || []).forEach(a => cnt[a] = (cnt[a] || 0) + 1));
+  const fav = Object.entries(cnt).sort((a, b) => b[1] - a[1])[0];
+  const thick = [...all].filter(b => b.pages).sort((a, b) => b.pages - a.pages)[0];
+  const days = b => (b.started && b.finished) ? Math.round((new Date(b.finished) - new Date(b.started)) / 864e5) : null;
+  const fast = all.filter(b => days(b) !== null && days(b) >= 0).sort((a, b) => days(a) - days(b))[0];
+  const line = (k, v) => `<div><span>${k}</span><i></i><b>${v}</b></div>`;
+  const count = all.length;
+  openSheet(`${sheetTop(`Leeskaart ${year}`)}
+    <div class="ledger">
+      ${line("Boeken uitgelezen", yr.length)}
+      ${line("Bladzijden", pages.toLocaleString("nl-NL"))}
+      ${pages ? line("Stapel papier", stack < 100 ? stack.toFixed(1).replace(".", ",") + " cm" : (stack / 100).toFixed(2).replace(".", ",") + " m") : ""}
+      ${thick ? line("Dikste boek", thick.pages + " blz.") : ""}
+      ${fast ? line("Snelst uit", days(fast) === 0 ? "op één dag" : days(fast) + (days(fast) === 1 ? " dag" : " dagen")) : ""}
+      ${fav && fav[1] > 1 ? line("Favoriete schrijver", esc(fav[0])) : ""}
+    </div>
+    <h4>Per maand</h4>
+    <div class="months">${MAAND.map((_, i) => `<div class="mcol">${yr.filter(b => +b.finished.slice(5, 7) === i + 1).map(b => `<i style="--c:${look(b).color}"></i>`).join("")}</div>`).join("")}</div>
+    <div class="mlab">${"JFMAMJJASOND".split("").map(m => `<span>${m}</span>`).join("")}</div>
+    <h4>Gestempeld</h4>
+    ${yr.length ? `<div class="loans">${[...yr].reverse().map(b => `<button class="loan" data-goto="${b.id}"><span class="dstamp">${stampDate(b.finished)}</span><b>${esc(b.title)}</b></button>`).join("")}</div>`
+      : `<p class="hint">Nog geen stempels dit jaar. Lees een boek uit en hij verschijnt hier.</p>`}
+    <h4>Vitrine</h4>
+    <p class="hint" style="margin-bottom:10px">Bij elk aantal gelezen boeken komt er iets nieuws in je kast.</p>
+    <div class="vitrine">${MILESTONES.map(([n, e, t]) => count >= n
+      ? `<div class="vit"><span class="e">${e}</span><b>${t}</b>${n} boek${n > 1 ? "en" : ""}</div>`
+      : `<div class="vit locked"><span class="e">${e}</span><b>???</b>nog ${n - count}</div>`).join("")}</div>`);
+  $$("#sheet [data-goto]").forEach(el => el.onclick = async () => {
+    const id = el.dataset.goto; await closeSheet();
+    openBook(id, { from: $(`.spine[data-open="${id}"]`), page: 1 });
+  });
 }
 
 /* ---------- Boeken opzoeken ---------- */
@@ -379,15 +1141,17 @@ async function searchBoth(q) {
   });
 }
 
-/* ---------- Toevoegen ---------- */
-$("#addBtn").onclick = () => openSheet(`${sheetTop("Boek toevoegen")}
-  <div class="choice">
-    <button id="cScan"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></span>
-      <span><b>Scan de streepjescode</b><small>Achterop het boek, het snelst</small></span></button>
-    <button id="cSearch"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
-      <span><b>Zoek op titel</b><small>Of op schrijver</small></span></button>
-    <button id="cManual"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6A4CE0" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-      <span><b>Zelf invullen</b><small>Als het boek niet gevonden wordt</small></span></button>
+/* ---------- Nieuw boek: de catalogus ---------- */
+const ICO = {
+  scan: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>`,
+  zoek: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`,
+  pen: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`
+};
+$("#newBtn").onclick = () => openSheet(`${sheetTop("Nieuw boek")}
+  <div class="drawer">
+    <button id="cScan"><span class="ico">${ICO.scan}</span><span><b>Streepjescode scannen</b><small>Achterop het boek, het snelst</small></span></button>
+    <button id="cSearch"><span class="ico">${ICO.zoek}</span><span><b>Zoeken in de catalogus</b><small>Op titel of schrijver</small></span></button>
+    <button id="cManual"><span class="ico">${ICO.pen}</span><span><b>Zelf een kaart schrijven</b><small>Als het boek niet gevonden wordt</small></span></button>
   </div>`);
 document.addEventListener("click", e => {
   if (e.target.closest("#cScan")) openScanner();
@@ -401,41 +1165,37 @@ async function stopScanner() {
 }
 async function openScanner() {
   await stopScanner();
-  openSheet(`${sheetTop("Scan de streepjescode")}
-    <div id="reader"></div>
+  openSheet(`${sheetTop("Scannen")}
+    <div id="scanbox"></div>
     <p class="status" id="scanStatus">Houd de streepjescode achterop het boek in beeld.</p>`, stopScanner);
-  if (typeof Html5Qrcode === "undefined") { $("#scanStatus").innerHTML = `<span class="err">De scanner kon niet laden. Zoek het boek op titel.</span>`; return; }
+  if (typeof Html5Qrcode === "undefined") { $("#scanStatus").innerHTML = `<span class="err">De scanner kon niet laden. Zoek het boek in de catalogus.</span>`; return; }
   let busy = false;
-  scanner = new Html5Qrcode("reader", {
-    formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13], verbose: false,
-    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-  });
+  scanner = new Html5Qrcode("scanbox", { formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13], verbose: false, experimentalFeatures: { useBarCodeDetectorIfSupported: true } });
   try {
     await scanner.start({ facingMode: "environment" },
-      { fps: 10, qrbox: (w) => ({ width: Math.floor(w * 0.85), height: Math.floor(w * 0.4) }) },
+      { fps: 10, qrbox: w => ({ width: Math.floor(w * 0.85), height: Math.floor(w * 0.4) }) },
       async text => {
         if (busy) return;
         const isbn = text.replace(/\D/g, "");
         if (!/^97[89]\d{10}$/.test(isbn)) { $("#scanStatus").textContent = "Dat is geen boekcode. Zoek de streepjescode met 978 of 979 ervoor."; return; }
-        busy = true;
+        busy = true; sfx("stamp");
         if (navigator.vibrate) navigator.vibrate(60);
-        await stopScanner(); onClose = null;
-        $("#reader").remove();
-        $("#scanStatus").innerHTML = `<span class="spinner"></span>Boek opzoeken…`;
+        await stopScanner(); onSheetClose = null;
+        $("#scanbox").remove();
+        $("#scanStatus").innerHTML = `<span class="spinner"></span>Even in de catalogus kijken…`;
         const b = await lookupIsbn(isbn);
         if (b) openPreview(b);
-        else openManual({ isbn }, "Dit boek staat niet in de boekendatabases. Vul het zelf in, dat kan ook.");
+        else openManual({ isbn }, "Dit boek staat niet in de catalogus. Schrijf zelf een kaart, dat kan ook.");
       }, () => {});
   } catch (err) {
-    $("#scanStatus").innerHTML = `<span class="err">De camera start niet. Geef de browser toestemming om de camera te gebruiken, of zoek het boek op titel.</span>`;
+    $("#scanStatus").innerHTML = `<span class="err">De camera start niet. Geef de browser toestemming om de camera te gebruiken, of zoek het boek in de catalogus.</span>`;
   }
 }
-
 function openSearch() {
-  openSheet(`${sheetTop("Zoek een boek")}
+  openSheet(`${sheetTop("Catalogus")}
     <input type="search" id="q" placeholder="Titel of schrijver" enterkeyhint="search" autocomplete="off">
     <div class="results" id="res"></div>
-    <button class="btn ghost" id="toManual">Niet gevonden? Zelf invullen</button>`);
+    <button class="btn line" id="toManual">Niet gevonden? Zelf een kaart schrijven</button>`);
   const q = $("#q"); q.focus();
   let t, n = 0, results = [];
   q.oninput = () => { clearTimeout(t); t = setTimeout(run, 450); };
@@ -448,117 +1208,57 @@ function openSearch() {
     results = await searchBoth(v);
     if (my !== n) return;
     $("#res").innerHTML = results.length ? results.map((b, i) => `
-      <button class="wrow" data-pick="${i}">${coverHTML(b)}
-        <div style="min-width:0"><b>${esc(b.title)}</b><small>${esc([b.authors.join(", "), b.year].filter(Boolean).join(", "))}</small></div></button>`).join("")
-      : `<p class="status">Niets gevonden. Probeer een ander woord, of vul het boek zelf in.</p>`;
-    $("#res").querySelectorAll("[data-pick]").forEach(el => el.onclick = () => openPreview(results[+el.dataset.pick]));
+      <button class="res" data-pick="${i}"><div class="thumb">${artHTML(b)}</div>
+        <div style="min-width:0"><b>${esc(b.title)}</b><small>${esc([authors(b), b.year].filter(Boolean).join(", "))}</small></div></button>`).join("")
+      : `<p class="status">Niets gevonden. Probeer een ander woord, of schrijf zelf een kaart.</p>`;
+    $$("#res [data-pick]").forEach(el => el.onclick = () => openPreview(results[+el.dataset.pick]));
   }
 }
-
 function openManual(pre, msg) {
-  openSheet(`${sheetTop("Zelf invullen")}
+  openSheet(`${sheetTop("Nieuwe kaart")}
     ${msg ? `<p class="hint">${esc(msg)}</p>` : ""}
     <label for="mT">Titel</label><input type="text" id="mT" value="${esc(pre.title || "")}">
-    <label for="mA">Schrijver</label><input type="text" id="mA" value="${esc((pre.authors || []).join(", "))}">
+    <label for="mA">Schrijver</label><input type="text" id="mA" value="${esc(authors(pre))}">
     <label for="mP">Aantal bladzijden</label><input type="number" id="mP" inputmode="numeric" min="1" value="${pre.pages || ""}">
     <button class="btn" id="mGo">Verder</button>`);
   $("#mGo").onclick = () => {
     const title = $("#mT").value.trim();
     if (!title) { $("#mT").focus(); toast("Vul in elk geval de titel in"); return; }
-    openPreview({ title, authors: $("#mA").value.split(",").map(s => s.trim()).filter(Boolean),
-      pages: parseInt($("#mP").value) || null, isbn: pre.isbn || "", cover: "" });
+    openPreview({ title, authors: $("#mA").value.split(",").map(s => s.trim()).filter(Boolean), pages: parseInt($("#mP").value) || null, isbn: pre.isbn || "", cover: "" });
   };
 }
-
 function openPreview(b) {
   const dup = state.books.find(x => (b.isbn && x.isbn === b.isbn) ||
     ((x.title || "").toLowerCase() === b.title.toLowerCase() && ((x.authors || [])[0] || "") === ((b.authors || [])[0] || "")));
-  if (dup) { toast("Dit boek staat al in je boekenkast"); openDetail(dup.id); return; }
-  openSheet(`${sheetTop("Waar zet je het neer?")}
-    <div class="detail-head">${coverHTML(b)}
-      <div><h3>${esc(b.title)}</h3><p>${esc((b.authors || []).join(", "))}</p>
-      <p>${[b.pages ? b.pages + " bladzijden" : "", b.year].filter(Boolean).join(", ")}</p></div></div>
-    <div class="choice">
-      <button data-st="lezen"><span><b>Ik ben het aan het lezen</b></span></button>
-      <button data-st="gelezen"><span><b>Ik heb het al uit</b></span></button>
-      <button data-st="wil"><span><b>Ik wil het nog lezen</b></span></button>
+  if (dup) { closeSheet().then(() => { toast("Dit boek staat al in je bibliotheek"); openBook(dup.id, { from: $(`[data-open="${dup.id}"]`) }); }); return; }
+  openSheet(`${sheetTop("Waar leg je het neer?")}
+    <div style="display:flex;gap:16px;margin-bottom:18px"><div style="width:96px;flex:none;box-shadow:0 6px 14px rgba(0,0,0,.25)">${artHTML(b)}</div>
+      <div><b style="font:italic 700 21px/1.15 var(--display);display:block">${esc(b.title)}</b><p class="hint" style="margin-top:4px">${esc(authors(b))}</p>
+      <p class="hint" style="font-family:var(--type);font-size:14px;margin-top:6px">${esc([b.pages ? b.pages + " blz." : "", b.year].filter(Boolean).join(", "))}</p></div></div>
+    <div class="drawer">
+      <button data-st="lezen"><span><b>Op de leestafel</b><small>Ik ben het aan het lezen</small></span></button>
+      <button data-st="gelezen"><span><b>In de kast</b><small>Ik heb het al uit</small></span></button>
+      <button data-st="wil"><span><b>Op mijn leesstapel</b><small>Ik wil het nog lezen</small></span></button>
     </div>`);
-  $("#sheet").querySelectorAll("[data-st]").forEach(el => el.onclick = () => {
+  $$("#sheet [data-st]").forEach(el => el.onclick = async () => {
     const st = el.dataset.st;
-    const book = { id: uid(), title: b.title, authors: b.authors || [], pages: b.pages || null, cover: b.cover || "",
-      isbn: b.isbn || "", year: b.year || "", status: st, page: st === "gelezen" ? (b.pages || 0) : 0,
-      rating: 0, review: "", started: st === "lezen" ? today() : "", finished: st === "gelezen" ? today() : "", added: today() };
-    state.books.push(book); save();
-    if (st === "gelezen") openDetail(book.id, "Hoeveel sterren geef je het?");
-    else { closeSheet(); toast(st === "lezen" ? "Veel leesplezier!" : "Op je verlanglijst gezet"); }
-  });
-}
-
-/* ---------- Boek bekijken en bijwerken ---------- */
-function openDetail(id, msg) {
-  const b = byId(id); if (!b) return;
-  const segBtn = (v, t) => `<button data-s="${v}" aria-pressed="${b.status === v}">${t}</button>`;
-  openSheet(`${sheetTop("")}
-    <div class="detail-head">${coverHTML(b)}
-      <div><h3>${esc(b.title)}</h3><p>${esc((b.authors || []).join(", "))}</p></div></div>
-    ${msg ? `<p class="hint" style="margin-bottom:10px">${esc(msg)}</p>` : ""}
-    <div class="seg">${segBtn("wil", "Wil ik lezen")}${segBtn("lezen", "Aan het lezen")}${segBtn("gelezen", "Gelezen")}</div>
-    <div id="dBody"></div>
-    <button class="btn danger" id="del">Boek verwijderen</button>`);
-  $("#sheet").querySelectorAll("[data-s]").forEach(el => el.onclick = () => {
-    const s = el.dataset.s; if (s === b.status) return;
-    b.status = s;
-    if (s === "lezen" && !b.started) b.started = today();
-    if (s === "gelezen") {
-      if (!b.finished) b.finished = today();
-      if (b.pages) b.page = b.pages;
-      const n = state.books.filter(x => x.status === "gelezen" && (x.finished || "").startsWith(thisYear())).length;
-      toast(`Op de plank gezet! Boek ${n} van dit jaar.`);
-    }
-    if (s !== "gelezen") b.finished = "";
+    const book = { id: uid(), title: b.title, authors: b.authors || [], pages: b.pages || null, cover: b.cover || "", isbn: b.isbn || "", year: b.year || "",
+      status: st === "gelezen" ? "lezen" : st, page: 0, rating: 0, review: "", quotes: [], color: "", pattern: "",
+      started: st === "wil" ? "" : today(), finished: "", added: today() };
+    state.books.push(book);
+    if (st === "gelezen") { book.started = ""; markDone(book); }
     save();
-    $("#sheet").querySelectorAll("[data-s]").forEach(x => x.setAttribute("aria-pressed", x.dataset.s === s));
-    body();
+    await closeSheet();
+    if (st === "wil") {
+      const s = $(`.slab[data-open="${book.id}"]`);
+      if (s) { s.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" }); setTimeout(() => s.classList.add("land"), 300); }
+      toast("Op je leesstapel gelegd"); sfx("cover");
+      return;
+    }
+    const target = $(`[data-open="${book.id}"]`);
+    if (target) { const r = target.getBoundingClientRect(); window.scrollTo(0, r.top + scrollY - innerHeight / 2); }
+    openBook(book.id, { from: target, page: st === "gelezen" ? 4 : 2, finishing: st === "gelezen" });
   });
-  $("#del").onclick = () => {
-    if (!confirm(`"${b.title}" uit je boekenkast verwijderen?`)) return;
-    state.books = state.books.filter(x => x.id !== b.id); save(); closeSheet(); toast("Boek verwijderd");
-  };
-  function body() {
-    let h = "";
-    if (b.status === "lezen") h += `
-      <div class="row"><div><label for="dPg">Ik ben op bladzijde</label><input type="number" id="dPg" inputmode="numeric" min="0" value="${b.page || ""}"></div>
-      <div><label for="dPs">van de</label><input type="number" id="dPs" inputmode="numeric" min="1" value="${b.pages || ""}"></div></div>`;
-    if (b.status === "gelezen") h += `
-      <label>Hoeveel sterren?</label>
-      <div class="stars" id="stars">${[1,2,3,4,5].map(n => `<button data-r="${n}" class="${n <= b.rating ? "on" : ""}" aria-label="${n} ster${n > 1 ? "ren" : ""}">★</button>`).join("")}</div>`;
-    if (b.status !== "wil") h += `
-      <div class="row">
-        <div><label for="dSt">Begonnen op</label><input type="date" id="dSt" value="${b.started || ""}"></div>
-        ${b.status === "gelezen" ? `<div><label for="dFi">Uitgelezen op</label><input type="date" id="dFi" value="${b.finished || ""}"></div>` : ""}
-      </div>
-      <label for="dRv">${b.status === "gelezen" ? "Wat vond je ervan?" : "Aantekeningen"}</label>
-      <textarea id="dRv" placeholder="${b.status === "gelezen" ? "Wie was je favoriete personage? Zou je het nog een keer lezen?" : "Wat is er tot nu toe gebeurd?"}">${esc(b.review)}</textarea>`;
-    else h += `<label for="dRv">Waarom wil je het lezen?</label>
-      <textarea id="dRv" placeholder="Bijvoorbeeld: tip van een vriendin">${esc(b.review)}</textarea>`;
-    h += `<button class="btn" onclick="closeSheet()">Klaar</button>`;
-    $("#dBody").innerHTML = h;
-    const bind = (sel, fn) => { const el = $(sel); if (el) el.oninput = e => { fn(e.target.value); save(); }; };
-    bind("#dPg", v => b.page = Math.max(0, parseInt(v) || 0));
-    bind("#dPs", v => b.pages = parseInt(v) || null);
-    bind("#dSt", v => b.started = v);
-    bind("#dFi", v => b.finished = v);
-    bind("#dRv", v => b.review = v);
-    $("#dBody").querySelectorAll("[data-r]").forEach(el => el.onclick = () => {
-      const r = +el.dataset.r; b.rating = b.rating === r ? 0 : r; save();
-      $("#dBody").querySelectorAll("[data-r]").forEach(x => x.classList.toggle("on", +x.dataset.r <= b.rating));
-    });
-    const pg = $("#dPg");
-    if (pg) pg.addEventListener("change", () => {
-      if (b.pages && b.page >= b.pages) toast("Uit? Tik dan op Gelezen.");
-    });
-  }
-  body();
 }
 
 /* ---------- Start ---------- */
